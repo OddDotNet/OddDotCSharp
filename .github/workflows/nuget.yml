@@ -26,6 +26,9 @@ jobs:
           submodules: recursive # for the proto files
           fetch-depth: 0 # For GitVersion.MsBuild
 
+      - name: Restore
+        run: dotnet restore
+        
       - name: Build
         run: msbuild
 
