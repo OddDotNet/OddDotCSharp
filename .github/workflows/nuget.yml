@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0 # For GitVersion.MsBuild
 
       - name: Build
-        run: dotnet build
+        run: msbuild
 
       - name: Push
         run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
