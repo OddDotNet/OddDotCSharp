@@ -3,11 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GitVersionTargetFramework>net8.0</GitVersionTargetFramework>
-        <LangVersion>12.0</LangVersion>
+        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
     
     <PropertyGroup>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
