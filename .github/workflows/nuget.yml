@@ -24,13 +24,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive # for the proto files
-          fetch-depth: 0 # For GitVersion.MsBuild
+          fetch-depth: 0 # For GitVersion
 
-      - name: Restore
-        run: dotnet restore
+      # Setup GitVersion
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '6.x'
+      - name: Execute GitVersion
+        id: version_step
+        uses: gittools/actions/gitversion/execute@v3.0.0
+        with:
+          useConfigFile: true
         
       - name: Build
-        run: msbuild
+        run: dotnet build
+
+      - name: Pack
+        run: dotnet pack -p:PackageVersion=${{ steps.version_step.outputs.GitVersion_MajorMinorPatch }}
 
       - name: Push
-        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "**/*.${{ steps.version_step.outputs.GitVersion_MajorMinorPatch }}.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <GitVersionTargetFramework>net8.0</GitVersionTargetFramework>
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>
     
@@ -14,14 +13,9 @@
     <PropertyGroup>
         <PackageId>OddDotNet.Client</PackageId>
         <PackageTags>OddDotNet</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
       <PackageReference Include="Google.Protobuf" Version="3.28.2" />
       <PackageReference Include="Grpc.Core.Api" Version="2.66.0" />
       <PackageReference Include="Grpc.Tools" Version="2.66.0">
