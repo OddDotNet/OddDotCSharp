@@ -181,7 +181,7 @@ public class SpanQueryRequestBuilderTests
             SpanStatusCode code = SpanStatusCode.Ok;
             builder.Where(filters =>
             {
-                filters.AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.StatusCode, code, EnumCompareAsType.Equals);
+                filters.AddSpanStatusCodeFilter(code, EnumCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -202,7 +202,7 @@ public class SpanQueryRequestBuilderTests
             SpanKind kind = SpanKind.Internal;
             builder.Where(filters =>
             {
-                filters.AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Kind, kind, EnumCompareAsType.Equals);
+                filters.AddSpanKindFilter(kind, EnumCompareAsType.Equals);
             });
             var request = builder.Build();
             

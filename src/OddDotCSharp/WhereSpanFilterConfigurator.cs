@@ -9,6 +9,14 @@ namespace OddDotCSharp
     {
         internal List<WhereSpanFilter> Filters { get; } = new List<WhereSpanFilter>();
 
+        /// <summary>
+        /// Adds a <see cref="StringProperty"/> filter to the list of filters. 
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this WhereSpanFilterConfigurator</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="StringProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string compare,
             StringCompareAsType compareAs)
         {
@@ -24,6 +32,14 @@ namespace OddDotCSharp
             return this;
         }
 
+        /// <summary>
+        /// Adds a <see cref="ByteStringProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="compare">The byte array to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="ByteStringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="ByteStringProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, byte[] compare,
             ByteStringCompareAsType compareAs)
         {
@@ -39,6 +55,14 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="UInt64Property"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="compare">The ulong to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="UInt64Property"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, ulong compare,
             UInt64CompareAsType compareAs)
         {
@@ -54,36 +78,52 @@ namespace OddDotCSharp
             return this;
         }
         
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, SpanStatusCode compare,
+        /// <summary>
+        /// Adds a <see cref="SpanStatusCodeProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The <see cref="SpanStatusCode"/> to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="EnumCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        public WhereSpanFilterConfigurator AddSpanStatusCodeFilter(SpanStatusCode compare,
             EnumCompareAsType compareAs)
         {
-            ThrowOnPropertyTypeMismatch(typeof(SpanStatusCodeProperty), property);
-            
             var spanStatusCodeProperty = new SpanStatusCodeProperty
             {
                 CompareAs = compareAs,
                 Compare = compare
             };
             
-            AddFilter(property, spanStatusCodeProperty);
+            AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.StatusCode, spanStatusCodeProperty);
             return this;
         }
         
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, SpanKind compare,
+        /// <summary>
+        /// Adds a <see cref="SpanKindProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The <see cref="SpanKind"/> to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="EnumCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        public WhereSpanFilterConfigurator AddSpanKindFilter(SpanKind compare,
             EnumCompareAsType compareAs)
         {
-            ThrowOnPropertyTypeMismatch(typeof(SpanKindProperty), property);
-            
             var spanKindProperty = new SpanKindProperty
             {
                 CompareAs = compareAs,
                 Compare = compare
             };
             
-            AddFilter(property, spanKindProperty);
+            AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Kind, spanKindProperty);
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="UInt32Property"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="compare">The uint to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="UInt32Property"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, uint compare,
             UInt32CompareAsType compareAs)
         {
@@ -99,6 +139,15 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="KeyValueProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, string compare,
             StringCompareAsType compareAs)
         {
@@ -118,6 +167,15 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="KeyValueProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
+        /// <param name="compare">The bool to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="BoolCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, bool compare,
             BoolCompareAsType compareAs)
         {
@@ -137,6 +195,15 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="KeyValueProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
+        /// <param name="compare">The long to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="Int64CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, long compare,
             Int64CompareAsType compareAs)
         {
@@ -156,6 +223,15 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="KeyValueProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
+        /// <param name="compare">The double to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="DoubleCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, double compare,
             DoubleCompareAsType compareAs)
         {
@@ -175,6 +251,15 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a <see cref="KeyValueProperty"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
+        /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
+        /// <param name="compare">The byte array to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="ByteStringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
         public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, byte[] compare,
             ByteStringCompareAsType compareAs)
         {
@@ -194,6 +279,13 @@ namespace OddDotCSharp
             return this;
         }
 
+        /// <summary>
+        /// Add a <see cref="WhereSpanOrFilter"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="configure">Action used to configure the filters. This action behaves the same way as
+        /// the action passed to the Where() method. See <see cref="SpanQueryRequestBuilder.Where"/>.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
+        /// <exception cref="Exception">When property mismatches are detected on any of the <see cref="WhereSpanFilter"/> filters passed in.</exception>
         public WhereSpanFilterConfigurator AddOrFilter(Action<WhereSpanFilterConfigurator> configure)
         {
             var configurator = new WhereSpanFilterConfigurator();
