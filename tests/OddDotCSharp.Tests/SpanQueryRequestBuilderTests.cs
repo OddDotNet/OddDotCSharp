@@ -9,7 +9,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetTakeToTakeFirstWhenNotSpecified()
         {
-            var request = SpanQueryRequestBuilder.Create().Build();
+            var request = new SpanQueryRequestBuilder().Build();
             
             Assert.Equal(Take.TakeTypeOneofCase.TakeFirst, request.Take.TakeTypeCase);
         }
@@ -18,7 +18,7 @@ public class SpanQueryRequestBuilderTests
         public void SetDurationToDefaultWhenNotSpecified()
         {
             ulong expectedMsValue = 30000;
-            var request = SpanQueryRequestBuilder.Create().Build();
+            var request = new SpanQueryRequestBuilder().Build();
             
             Assert.Equal(Duration.ValueOneofCase.MillisecondsValue, request.Duration.ValueCase);
             Assert.Equal(expectedMsValue, request.Duration.MillisecondsValue);
@@ -30,7 +30,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetTakeToTakeFirst()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             builder.TakeFirst();
             var request = builder.Build();
             
@@ -43,7 +43,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetTakeToTakeExact()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             int number = 3;
             builder.TakeExact(number);
             var request = builder.Build();
@@ -58,7 +58,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetTakeToTakeAll()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             builder.TakeAll();
             var request = builder.Build();
             
@@ -71,7 +71,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetDuration()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             TimeSpan duration = TimeSpan.FromMilliseconds(500);
             builder.Wait(duration);
             var request = builder.Build();
@@ -86,7 +86,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void ThrowOnInvalidProperty()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
 
             Assert.Throws<Exception>(() =>
@@ -101,7 +101,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void ThrowOnMismatchPropertyType()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
 
             Assert.Throws<Exception>(() =>
@@ -117,7 +117,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -135,7 +135,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -156,7 +156,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddUInt64PropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             ulong startTimeUnixNano = 1000000000;
             builder.Where(filters =>
             {
@@ -177,7 +177,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddSpanStatusCodePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             SpanStatusCode code = SpanStatusCode.Ok;
             builder.Where(filters =>
             {
@@ -198,7 +198,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddSpanKindPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             SpanKind kind = SpanKind.Internal;
             builder.Where(filters =>
             {
@@ -219,7 +219,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddUInt32PropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             uint flags = 1000000000;
             builder.Where(filters =>
             {
@@ -240,7 +240,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddKeyValueStringPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -264,7 +264,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddKeyValueBoolPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -288,7 +288,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddKeyValueInt64PropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -312,7 +312,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddKeyValueDoublePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -336,7 +336,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddKeyValueByteStringPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "trace.parentSpanId";
             byte[] value = [1, 2, 3, 4, 5, 6, 7, 8];
             
@@ -360,7 +360,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddOrFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             builder.Where(filters =>
             {
                 filters.AddOrFilter(orFilters =>
@@ -393,7 +393,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddSpanNamePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -411,7 +411,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddSpanIdPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -432,7 +432,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddTraceIdPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] traceId = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -453,7 +453,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddParentSpanIdPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -474,7 +474,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStartTimeUnixNanoPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             ulong startTimeUnixNano = 1000000000;
             builder.Where(filters =>
             {
@@ -495,7 +495,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddEndTimeUnixNanoPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             ulong endTimeUnixNano = 1000000000;
             builder.Where(filters =>
             {
@@ -516,7 +516,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -540,7 +540,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddBoolAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -564,7 +564,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInt64AttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -588,7 +588,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddDoubleAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -612,7 +612,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             byte[] value = [1, 2, 3, 4];
             
@@ -636,7 +636,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddEventTimeUnixNanoPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             ulong eventTimeUnixNano = 1000000000;
             builder.Where(filters =>
             {
@@ -657,7 +657,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddEventNamePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -678,7 +678,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddLinkTraceStatePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -699,7 +699,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddTraceStatePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -720,7 +720,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInstrumentationScopeNamePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -741,7 +741,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInstrumentationScopeVersionPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -762,7 +762,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInstrumentationScopeSchemaUrlPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -783,7 +783,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddResourceSchemaUrlPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
@@ -804,7 +804,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddLinkSpanIdPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -825,7 +825,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddLinkTraceIdPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             byte[] traceId = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
@@ -846,7 +846,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddLinkFlagsPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             uint flags = 1;
             builder.Where(filters =>
             {
@@ -867,7 +867,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddFlagsPropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             uint flags = 1;
             builder.Where(filters =>
             {
@@ -889,7 +889,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringEventAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -913,7 +913,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddBoolEventAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -937,7 +937,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInt64EventAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -961,7 +961,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddDoubleEventAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -985,7 +985,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringEventAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             byte[] value = [1, 2, 3, 4];
             
@@ -1010,7 +1010,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringLinkAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -1034,7 +1034,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddBoolLinkAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -1058,7 +1058,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInt64LinkAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -1082,7 +1082,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddDoubleLinkAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -1106,7 +1106,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringLinkAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             byte[] value = [1, 2, 3, 4];
             
@@ -1131,7 +1131,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringInstrumentationScopeAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -1155,7 +1155,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddBoolInstrumentationScopeAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -1179,7 +1179,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInt64InstrumentationScopeAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -1203,7 +1203,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddDoubleInstrumentationScopeAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -1227,7 +1227,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringInstrumentationScopeAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             byte[] value = [1, 2, 3, 4];
             
@@ -1252,7 +1252,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddStringResourceAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             string value = "test";
             
@@ -1276,7 +1276,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddBoolResourceAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             bool value = true;
             
@@ -1300,7 +1300,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddInt64ResourceAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             long value = 1;
             
@@ -1324,7 +1324,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddDoubleResourceAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.started";
             double value = 1;
             
@@ -1348,7 +1348,7 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void AddByteStringResourceAttributePropertyFilter()
         {
-            var builder = SpanQueryRequestBuilder.Create();
+            var builder = new SpanQueryRequestBuilder();
             string key = "service.name";
             byte[] value = [1, 2, 3, 4];
             

@@ -14,7 +14,7 @@ namespace OddDotCSharp
         private readonly SpanQueryRequest _request;
         private readonly WhereSpanFilterConfigurator _whereSpanFilterConfigurator;
 
-        private SpanQueryRequestBuilder()
+        public SpanQueryRequestBuilder()
         {
             _request = new SpanQueryRequest
             {
@@ -29,11 +29,6 @@ namespace OddDotCSharp
             };
             
             _whereSpanFilterConfigurator = new WhereSpanFilterConfigurator();
-        }
-
-        public static SpanQueryRequestBuilder Create()
-        {
-            return new SpanQueryRequestBuilder();
         }
 
         public SpanQueryRequestBuilder TakeFirst()
