@@ -61,7 +61,7 @@ namespace OddDotCSharp
         }
 
         /// <summary>
-        /// 
+        /// Takes all Spans that match the given filters within the provided timeframe.
         /// </summary>
         /// <returns>this <see cref="SpanQueryRequestBuilder"/></returns>
         public SpanQueryRequestBuilder TakeAll()
@@ -71,9 +71,9 @@ namespace OddDotCSharp
         }
 
         /// <summary>
-        /// 
+        /// Allows for specifying the amount of time to wait for a matching Span to be received. 
         /// </summary>
-        /// <param name="duration"></param>
+        /// <param name="duration">The TimeSpan specifying how long to wait for Spans.</param>
         /// <returns>this <see cref="SpanQueryRequestBuilder"/></returns>
         public SpanQueryRequestBuilder Wait(TimeSpan duration)
         {
