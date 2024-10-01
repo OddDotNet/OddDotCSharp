@@ -9,7 +9,7 @@ namespace OddDotCSharp
     /// </summary>
     public class SpanQueryRequestBuilder
     {
-        private const ulong DefaultDurationMilliseconds = 30000;
+        private const int DefaultDurationMilliseconds = 30000;
         
         private readonly SpanQueryRequest _request;
         private readonly WhereSpanFilterConfigurator _whereSpanFilterConfigurator;
@@ -32,7 +32,7 @@ namespace OddDotCSharp
                 },
                 Duration = new Duration
                 {
-                    MillisecondsValue = DefaultDurationMilliseconds
+                    Milliseconds = DefaultDurationMilliseconds
                 }
             };
             
@@ -79,7 +79,7 @@ namespace OddDotCSharp
         {
             _request.Duration = new Duration
             {
-                MillisecondsValue = (ulong)duration.TotalMilliseconds // TODO change to int, ulong ms is way too long
+                Milliseconds = (int)duration.TotalMilliseconds
             };
             return this;
         }
