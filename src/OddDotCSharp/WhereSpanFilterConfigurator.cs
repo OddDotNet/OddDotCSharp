@@ -303,6 +303,516 @@ namespace OddDotCSharp
             return this;
         }
 
+        /// <summary>
+        /// Adds a filter for SpanName to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the Span Name against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddSpanNameFilter(string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Name, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a filter for SpanId to the list of filters.
+        /// </summary>
+        /// <param name="compare">The byte[] to compare the Span Id against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.SpanId, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a filter for TraceId to the list of filters.
+        /// </summary>
+        /// <param name="compare">The byte[] to compare the Trace Id against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddTraceIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.TraceId, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a filter for ParentSpanId to the list of filters.
+        /// </summary>
+        /// <param name="compare">The byte[] to compare the Parent Span Id against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddParentSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ParentSpanId, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a filter for LinkSpanId to the list of filters.
+        /// </summary>
+        /// <param name="compare">The byte[] to compare the Span Id against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkSpanId, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a filter for LinkTraceId to the list of filters.
+        /// </summary>
+        /// <param name="compare">The byte[] to compare the Trace Id against.</param>
+        /// <param name="compareAs">The type of comparison to perform.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkTraceIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkTraceId, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a StartTimeUnixNano filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The ulong to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddStartTimeUnixNanoFilter(ulong compare,
+            UInt64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.StartTimeUnixNano, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EndTimeUnixNano filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The ulong to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEndTimeUnixNanoFilter(ulong compare,
+            UInt64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EndTimeUnixNano, compare, compareAs);
+        }
+
+        /// <summary>
+        /// Adds an attribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The string to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="StringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an attribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an attribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The bool to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="BoolCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an attribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The double to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an attribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The byte array to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="ByteStringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventTimeUnixNano filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The ulong to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventTimeUnixNanoFilter(ulong compare,
+            UInt64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventTimeUnixNano, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventName filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventNameFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventName, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkTraceState filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkTraceStateFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkTraceState, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an TraceState filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddTraceStateFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.TraceState, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeName filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeNameFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeName, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeVersion filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeVersionFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeVersion, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeSchemaUrl filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeSchemaUrlFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeSchemaUrl, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a ResourceSchemaUrl filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The string to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceSchemaUrlFilter(string compare,
+            StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceSchemaUrl, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a LinkFlags filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The uint to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkFlagsFilter(uint compare,
+            UInt32CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkFlags, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds a Flags filter to the list of filters.
+        /// </summary>
+        /// <param name="compare">The ulong to compare the property against.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddFlagsFilter(uint compare,
+            UInt32CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Flags, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The string to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="StringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The bool to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="BoolCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The double to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an EventAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The byte array to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="ByteStringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The string to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="StringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The bool to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="BoolCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The double to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an LinkAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The byte array to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="ByteStringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The string to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="StringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The bool to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="BoolCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The double to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an InstrumentationScopeAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The byte array to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="ByteStringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an ResourceAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The string to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="StringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, string compare, StringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an ResourceAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an ResourceAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The bool to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="BoolCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an ResourceAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The double to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+        }
+        
+        /// <summary>
+        /// Adds an ResourceAttribute filter to the list of filters.
+        /// </summary>
+        /// <param name="key">The key of the KeyValue attribute</param>
+        /// <param name="compare">The byte array to compare the KeyValue value to.</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="ByteStringCompareAsType"/> for more details</param>
+        /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
+        {
+            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+        }
+
         private void ThrowOnPropertyTypeMismatch(Type expectedType, WhereSpanPropertyFilter.PropertyOneofCase property)
         {
             var propertyInfo = typeof(WhereSpanPropertyFilter).GetProperty(property.ToString());
@@ -318,7 +828,7 @@ namespace OddDotCSharp
             var spanPropertyFilter = new WhereSpanPropertyFilter();
             
             // If we've gotten this far, we know the property exists, and we know it's the right type, so `!` because
-            // we know the PropertyInfo will not be null.
+            // we know the PropertyInfo will not be null. TODO: Probably a better way to do this.
             spanPropertyFilter.GetType().GetProperty(property.ToString())!.SetValue(spanPropertyFilter, spanProperty);
             var filter = new WhereSpanFilter
             {
