@@ -9,7 +9,7 @@ namespace OddDotCSharp
     /// </summary>
     public class SpanQueryRequestBuilder
     {
-        private const ulong DefaultDurationMilliseconds = 30000;
+        private const int DefaultDurationMilliseconds = 30000;
         
         private readonly SpanQueryRequest _request;
         private readonly WhereSpanFilterConfigurator _whereSpanFilterConfigurator;
@@ -32,7 +32,7 @@ namespace OddDotCSharp
                 },
                 Duration = new Duration
                 {
-                    MillisecondsValue = DefaultDurationMilliseconds
+                    Milliseconds = DefaultDurationMilliseconds
                 }
             };
             
@@ -73,13 +73,17 @@ namespace OddDotCSharp
         /// <summary>
         /// Allows for specifying the amount of time to wait for a matching Span to be received. 
         /// </summary>
-        /// <param name="duration">The TimeSpan specifying how long to wait for Spans.</param>
+        /// <param name="timeSpan">
+        /// The TimeSpan specifying how long to wait for Spans. Negative values will result in a Duration of 0.
+        /// </param>
         /// <returns>this <see cref="SpanQueryRequestBuilder"/></returns>
-        public SpanQueryRequestBuilder Wait(TimeSpan duration)
+        public SpanQueryRequestBuilder Wait(TimeSpan timeSpan)
         {
+            int duration = timeSpan.TotalMilliseconds < 0 ? 0 : (int)timeSpan.TotalMilliseconds;
+                
             _request.Duration = new Duration
             {
-                MillisecondsValue = (ulong)duration.TotalMilliseconds // TODO change to int, ulong ms is way too long
+                Milliseconds = duration
             };
             return this;
         }

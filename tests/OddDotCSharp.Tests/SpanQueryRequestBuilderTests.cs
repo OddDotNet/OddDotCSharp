@@ -17,11 +17,10 @@ public class SpanQueryRequestBuilderTests
         [Fact]
         public void SetDurationToDefaultWhenNotSpecified()
         {
-            ulong expectedMsValue = 30000;
+            int expectedMsValue = 30000;
             var request = new SpanQueryRequestBuilder().Build();
             
-            Assert.Equal(Duration.ValueOneofCase.MillisecondsValue, request.Duration.ValueCase);
-            Assert.Equal(expectedMsValue, request.Duration.MillisecondsValue);
+            Assert.Equal(expectedMsValue, request.Duration.Milliseconds);
         }
     }
 
@@ -76,8 +75,7 @@ public class SpanQueryRequestBuilderTests
             builder.Wait(duration);
             var request = builder.Build();
             
-            Assert.Equal(Duration.ValueOneofCase.MillisecondsValue, request.Duration.ValueCase);
-            Assert.Equal(duration.TotalMilliseconds, request.Duration.MillisecondsValue);
+            Assert.Equal(duration.TotalMilliseconds, request.Duration.Milliseconds);
         }
     }
 
