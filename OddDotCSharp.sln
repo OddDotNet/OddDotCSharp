@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OddDotCSharp", "src\OddDotCSharp\OddDotCSharp.csproj", "{5BBF0EC3-E6E8-4F24-B322-837BD927E77C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OddDotCSharp.Tests", "tests\OddDotCSharp.Tests\OddDotCSharp.Tests.csproj", "{C868685E-288E-4F68-ACDF-064664C402F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{5BBF0EC3-E6E8-4F24-B322-837BD927E77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBF0EC3-E6E8-4F24-B322-837BD927E77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BBF0EC3-E6E8-4F24-B322-837BD927E77C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C868685E-288E-4F68-ACDF-064664C402F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C868685E-288E-4F68-ACDF-064664C402F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C868685E-288E-4F68-ACDF-064664C402F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C868685E-288E-4F68-ACDF-064664C402F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
