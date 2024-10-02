@@ -17,7 +17,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -45,3 +46,8 @@ jobs:
 
       - name: Push
         run: dotnet nuget push "**/*.${{ steps.version_step.outputs.GitVersion_MajorMinorPatch }}.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+      - name: Git Tag
+        run: git tag v${{ steps.version_step.outputs.GitVersion_MajorMinorPatch }}
+      - name: Push Tag
+        run: git push origin v${{ steps.version_step.outputs.GitVersion_MajorMinorPatch }}
