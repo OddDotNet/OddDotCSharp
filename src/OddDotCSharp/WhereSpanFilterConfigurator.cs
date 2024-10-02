@@ -17,7 +17,7 @@ namespace OddDotCSharp
         /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
         /// <returns>this WhereSpanFilterConfigurator</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="StringProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string compare,
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string compare,
             StringCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(StringProperty), property);
@@ -40,7 +40,7 @@ namespace OddDotCSharp
         /// <param name="compareAs">The type of comparison to do. See <see cref="ByteStringCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="ByteStringProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, byte[] compare,
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, byte[] compare,
             ByteStringCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(ByteStringProperty), property);
@@ -60,11 +60,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
         /// <param name="compare">The ulong to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="UInt64Property"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, ulong compare,
-            UInt64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, ulong compare,
+            NumberCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(UInt64Property), property);
             
@@ -93,7 +93,7 @@ namespace OddDotCSharp
                 Compare = compare
             };
             
-            AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.StatusCode, spanStatusCodeProperty);
+            AddFilter(WhereSpanPropertyFilter.ValueOneofCase.StatusCode, spanStatusCodeProperty);
             return this;
         }
         
@@ -112,7 +112,7 @@ namespace OddDotCSharp
                 Compare = compare
             };
             
-            AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Kind, spanKindProperty);
+            AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Kind, spanKindProperty);
             return this;
         }
         
@@ -121,11 +121,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
         /// <param name="compare">The uint to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="UInt32Property"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, uint compare,
-            UInt32CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, uint compare,
+            NumberCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(UInt32Property), property);
             
@@ -148,7 +148,7 @@ namespace OddDotCSharp
         /// <param name="compareAs">The type of comparison to do. See <see cref="StringCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, string compare,
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string key, string compare,
             StringCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(KeyValueProperty), property);
@@ -176,7 +176,7 @@ namespace OddDotCSharp
         /// <param name="compareAs">The type of comparison to do. See <see cref="BoolCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, bool compare,
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string key, bool compare,
             BoolCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(KeyValueProperty), property);
@@ -201,11 +201,11 @@ namespace OddDotCSharp
         /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
         /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
         /// <param name="compare">The long to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="Int64CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, long compare,
-            Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string key, long compare,
+            NumberCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(KeyValueProperty), property);
             
@@ -229,11 +229,11 @@ namespace OddDotCSharp
         /// <param name="property">The enumeration identifying which SpanProperty to filter on.</param>
         /// <param name="key">The key of the <see cref="KeyValueProperty"/>.</param>
         /// <param name="compare">The double to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="DoubleCompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, double compare,
-            DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string key, double compare,
+            NumberCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(KeyValueProperty), property);
             
@@ -260,7 +260,7 @@ namespace OddDotCSharp
         /// <param name="compareAs">The type of comparison to do. See <see cref="ByteStringCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
         /// <exception cref="Exception">When the <see cref="WhereSpanPropertyFilter"/> Property is not a <see cref="KeyValueProperty"/></exception>
-        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, string key, byte[] compare,
+        public WhereSpanFilterConfigurator AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, string key, byte[] compare,
             ByteStringCompareAsType compareAs)
         {
             ThrowOnPropertyTypeMismatch(typeof(KeyValueProperty), property);
@@ -311,7 +311,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddSpanNameFilter(string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Name, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Name, compare, compareAs);
         }
         
         /// <summary>
@@ -322,7 +322,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.SpanId, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.SpanId, compare, compareAs);
         }
         
         /// <summary>
@@ -333,7 +333,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddTraceIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.TraceId, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.TraceId, compare, compareAs);
         }
         
         /// <summary>
@@ -344,7 +344,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddParentSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ParentSpanId, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ParentSpanId, compare, compareAs);
         }
         
         /// <summary>
@@ -355,7 +355,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkSpanIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkSpanId, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkSpanId, compare, compareAs);
         }
         
         /// <summary>
@@ -366,31 +366,31 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkTraceIdFilter(byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkTraceId, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkTraceId, compare, compareAs);
         }
         
         /// <summary>
         /// Adds a StartTimeUnixNano filter to the list of filters.
         /// </summary>
         /// <param name="compare">The ulong to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddStartTimeUnixNanoFilter(ulong compare,
-            UInt64CompareAsType compareAs)
+            NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.StartTimeUnixNano, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.StartTimeUnixNano, compare, compareAs);
         }
         
         /// <summary>
         /// Adds an EndTimeUnixNano filter to the list of filters.
         /// </summary>
         /// <param name="compare">The ulong to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddEndTimeUnixNanoFilter(ulong compare,
-            UInt64CompareAsType compareAs)
+            NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EndTimeUnixNano, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EndTimeUnixNano, compare, compareAs);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddAttributeFilter(string key, string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -410,11 +410,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, long compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -426,7 +426,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -434,11 +434,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The double to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddAttributeFilter(string key, double compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -450,19 +450,19 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Attribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, compare, compareAs);
         }
         
         /// <summary>
         /// Adds an EventTimeUnixNano filter to the list of filters.
         /// </summary>
         /// <param name="compare">The ulong to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt64CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddEventTimeUnixNanoFilter(ulong compare,
-            UInt64CompareAsType compareAs)
+            NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventTimeUnixNano, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventTimeUnixNano, compare, compareAs);
         }
         
         /// <summary>
@@ -474,7 +474,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddEventNameFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventName, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventName, compare, compareAs);
         }
         
         /// <summary>
@@ -486,7 +486,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddLinkTraceStateFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkTraceState, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkTraceState, compare, compareAs);
         }
         
         /// <summary>
@@ -498,7 +498,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddTraceStateFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.TraceState, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.TraceState, compare, compareAs);
         }
         
         /// <summary>
@@ -510,7 +510,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddInstrumentationScopeNameFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeName, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeName, compare, compareAs);
         }
         
         /// <summary>
@@ -522,7 +522,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddInstrumentationScopeVersionFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeVersion, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeVersion, compare, compareAs);
         }
         
         /// <summary>
@@ -534,7 +534,7 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddInstrumentationScopeSchemaUrlFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeSchemaUrl, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeSchemaUrl, compare, compareAs);
         }
         
         /// <summary>
@@ -546,31 +546,31 @@ namespace OddDotCSharp
         public WhereSpanFilterConfigurator AddResourceSchemaUrlFilter(string compare,
             StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceSchemaUrl, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceSchemaUrl, compare, compareAs);
         }
         
         /// <summary>
         /// Adds a LinkFlags filter to the list of filters.
         /// </summary>
         /// <param name="compare">The uint to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkFlagsFilter(uint compare,
-            UInt32CompareAsType compareAs)
+            NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkFlags, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkFlags, compare, compareAs);
         }
         
         /// <summary>
         /// Adds a Flags filter to the list of filters.
         /// </summary>
         /// <param name="compare">The ulong to compare the property against.</param>
-        /// <param name="compareAs">The type of comparison to do. See <see cref="UInt32CompareAsType"/> for more details.</param>
+        /// <param name="compareAs">The type of comparison to do. See <see cref="NumberCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddFlagsFilter(uint compare,
-            UInt32CompareAsType compareAs)
+            NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.Flags, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Flags, compare, compareAs);
         }
         
         /// <summary>
@@ -582,7 +582,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -590,11 +590,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, long compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -606,7 +606,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -614,11 +614,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The double to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, double compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -630,7 +630,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddEventAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.EventAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -642,7 +642,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -650,11 +650,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, long compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -666,7 +666,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -674,11 +674,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The double to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, double compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -690,7 +690,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddLinkAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.LinkAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -702,7 +702,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -710,11 +710,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, long compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -726,7 +726,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -734,11 +734,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The double to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, double compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -750,7 +750,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddInstrumentationScopeAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -762,7 +762,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, string compare, StringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -770,11 +770,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The Int64 to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="Int64CompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, long compare, Int64CompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, long compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -786,7 +786,7 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, bool compare, BoolCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -794,11 +794,11 @@ namespace OddDotCSharp
         /// </summary>
         /// <param name="key">The key of the KeyValue attribute</param>
         /// <param name="compare">The double to compare the KeyValue value to.</param>
-        /// <param name="compareAs">They type of comparison to do. <see cref="DoubleCompareAsType"/> for more details</param>
+        /// <param name="compareAs">They type of comparison to do. <see cref="NumberCompareAsType"/> for more details</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
-        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, double compare, DoubleCompareAsType compareAs)
+        public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, double compare, NumberCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, key, compare, compareAs);
         }
         
         /// <summary>
@@ -810,10 +810,10 @@ namespace OddDotCSharp
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/></returns>
         public WhereSpanFilterConfigurator AddResourceAttributeFilter(string key, byte[] compare, ByteStringCompareAsType compareAs)
         {
-            return AddFilter(WhereSpanPropertyFilter.PropertyOneofCase.ResourceAttribute, key, compare, compareAs);
+            return AddFilter(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, key, compare, compareAs);
         }
 
-        private void ThrowOnPropertyTypeMismatch(Type expectedType, WhereSpanPropertyFilter.PropertyOneofCase property)
+        private void ThrowOnPropertyTypeMismatch(Type expectedType, WhereSpanPropertyFilter.ValueOneofCase property)
         {
             var propertyInfo = typeof(WhereSpanPropertyFilter).GetProperty(property.ToString());
             if (propertyInfo == null)
@@ -823,7 +823,7 @@ namespace OddDotCSharp
                     $"Property {property.ToString()} is of type {propertyInfo.PropertyType}, but you supplied {expectedType}");
         }
 
-        private void AddFilter(WhereSpanPropertyFilter.PropertyOneofCase property, object spanProperty)
+        private void AddFilter(WhereSpanPropertyFilter.ValueOneofCase property, object spanProperty)
         {
             var spanPropertyFilter = new WhereSpanPropertyFilter();
             
