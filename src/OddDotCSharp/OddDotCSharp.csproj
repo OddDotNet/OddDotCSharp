@@ -13,6 +13,8 @@
     <PropertyGroup>
         <PackageId>OddDotNet.Client</PackageId>
         <PackageTags>OddDotNet</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +29,10 @@
     <!-- Internal proto definitions -->
     <ItemGroup>
         <Protobuf Include="OddDotProto/**/*.proto" GrpcServices="Client" ProtoRoot="OddDotProto/"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
