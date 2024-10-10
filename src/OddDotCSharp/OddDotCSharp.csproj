@@ -28,7 +28,7 @@
 
     <!-- Proto definitions -->
     <ItemGroup>
-        <Protobuf Include="submodules/OddDotProto/submodules/opentelemetry/**/*.proto" GrpcServices="Client" ProtoRoot="submodules/OddDotProto/submodules"/>
+        <Protobuf Include="submodules/OddDotProto/submodules/opentelemetry/**/*.proto" GrpcServices="None" ProtoRoot="submodules/OddDotProto/submodules"/>
         <Protobuf Include="submodules/OddDotProto/odddotproto/**/*.proto" GrpcServices="Client" ProtoRoot="submodules/OddDotProto/odddotproto/proto/trace/v1" AdditionalImportDirs="submodules/OddDotProto/submodules"/>
     </ItemGroup>
     
