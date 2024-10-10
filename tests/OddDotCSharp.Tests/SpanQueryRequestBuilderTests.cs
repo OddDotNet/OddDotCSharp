@@ -1,4 +1,5 @@
-using OddDotNet.Proto.Spans.V1;
+using OddDotNet.Proto.Trace.V1;
+using OpenTelemetry.Proto.Trace.V1;
 
 namespace OddDotCSharp.Tests;
 
@@ -176,7 +177,7 @@ public class SpanQueryRequestBuilderTests
         public void AddSpanStatusCodePropertyFilter()
         {
             var builder = new SpanQueryRequestBuilder();
-            SpanStatusCode code = SpanStatusCode.Ok;
+            Status.Types.StatusCode code = Status.Types.StatusCode.Ok;
             builder.Where(filters =>
             {
                 filters.AddSpanStatusCodeFilter(code, EnumCompareAsType.Equals);
@@ -197,7 +198,7 @@ public class SpanQueryRequestBuilderTests
         public void AddSpanKindPropertyFilter()
         {
             var builder = new SpanQueryRequestBuilder();
-            SpanKind kind = SpanKind.Internal;
+            Span.Types.SpanKind kind = Span.Types.SpanKind.Internal;
             builder.Where(filters =>
             {
                 filters.AddSpanKindFilter(kind, EnumCompareAsType.Equals);
