@@ -2,6 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/OddDotCSharp/OddDotProto" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/OddDotCSharp/submodules/OddDotProto" vcs="Git" />
   </component>
 </project>
