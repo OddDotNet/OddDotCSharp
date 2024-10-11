@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
-using OddDotNet.Proto.Spans.V1;
+using OddDotNet.Proto.Trace.V1;
+using OpenTelemetry.Proto.Trace.V1;
+
 
 namespace OddDotCSharp
 {
@@ -84,7 +86,7 @@ namespace OddDotCSharp
         /// <param name="compare">The <see cref="SpanStatusCode"/> to compare the property against.</param>
         /// <param name="compareAs">The type of comparison to do. See <see cref="EnumCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
-        public WhereSpanFilterConfigurator AddSpanStatusCodeFilter(SpanStatusCode compare,
+        public WhereSpanFilterConfigurator AddSpanStatusCodeFilter(Status.Types.StatusCode compare,
             EnumCompareAsType compareAs)
         {
             var spanStatusCodeProperty = new SpanStatusCodeProperty
@@ -100,10 +102,10 @@ namespace OddDotCSharp
         /// <summary>
         /// Adds a <see cref="SpanKindProperty"/> filter to the list of filters.
         /// </summary>
-        /// <param name="compare">The <see cref="SpanKind"/> to compare the property against.</param>
+        /// <param name="compare">The <see cref="Span.Types.SpanKind"/> to compare the property against.</param>
         /// <param name="compareAs">The type of comparison to do. See <see cref="EnumCompareAsType"/> for more details.</param>
         /// <returns>this <see cref="WhereSpanFilterConfigurator"/>.</returns>
-        public WhereSpanFilterConfigurator AddSpanKindFilter(SpanKind compare,
+        public WhereSpanFilterConfigurator AddSpanKindFilter(Span.Types.SpanKind compare,
             EnumCompareAsType compareAs)
         {
             var spanKindProperty = new SpanKindProperty

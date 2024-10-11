@@ -1,5 +1,5 @@
 using System;
-using OddDotNet.Proto.Spans.V1;
+using OddDotNet.Proto.Trace.V1;
 
 namespace OddDotCSharp
 {
