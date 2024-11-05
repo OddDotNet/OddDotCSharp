@@ -1,4 +1,7 @@
+using OddDotNet.Proto.Common.V1;
+using OddDotNet.Proto.Resource.V1;
 using OddDotNet.Proto.Trace.V1;
+using OpenTelemetry.Proto.Common.V1;
 using OpenTelemetry.Proto.Trace.V1;
 
 namespace OddDotCSharp.Tests;
@@ -83,62 +86,13 @@ public class SpanQueryRequestBuilderTests
     public class WhereShould
     {
         [Fact]
-        public void ThrowOnInvalidProperty()
+        public void AddSpanStatusMessagePropertyFilter()
         {
             var builder = new SpanQueryRequestBuilder();
-            const string name = "service1";
-
-            Assert.Throws<Exception>(() =>
-            {
-                builder.Where(filters =>
-                {
-                    filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.None, name, StringCompareAsType.Equals);
-                });
-            });
-        }
-
-        [Fact]
-        public void ThrowOnMismatchPropertyType()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            const string name = "service1";
-
-            Assert.Throws<Exception>(() =>
-            {
-                builder.Where(filters =>
-                {
-                    // TraceId is a ByteString, not a String
-                    filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.TraceId, name, StringCompareAsType.Equals);
-                });
-            });
-        }
-        
-        [Fact]
-        public void AddStringPropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            const string name = "service1";
+            const string message = "test";
             builder.Where(filters =>
             {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Name, name, StringCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, request.Filters.First().ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Name, request.Filters.First().SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters.First().SpanProperty.Name.CompareAs);
-            Assert.Equal(name, request.Filters.First().SpanProperty.Name.Compare);
-        }
-        
-        [Fact]
-        public void AddByteStringPropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.SpanId, spanId, ByteStringCompareAsType.Equals);
+                filters.AddSpanStatusMessageFilter(message, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -146,31 +100,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.SpanId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.SpanId.CompareAs);
-            Assert.Equal(spanId, filterToFind.SpanProperty.SpanId.Compare);
-        }
-        
-        [Fact]
-        public void AddUInt64PropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            ulong startTimeUnixNano = 1000000000;
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.StartTimeUnixNano, startTimeUnixNano, NumberCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.StartTimeUnixNano, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.StartTimeUnixNano.CompareAs);
-            Assert.Equal(startTimeUnixNano, filterToFind.SpanProperty.StartTimeUnixNano.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Status, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Status.Message.CompareAs);
+            Assert.Equal(message, filterToFind.Property.Status.Message.Compare);
         }
         
         [Fact]
@@ -188,10 +121,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.StatusCode, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(EnumCompareAsType.Equals, filterToFind.SpanProperty.StatusCode.CompareAs);
-            Assert.Equal(code, filterToFind.SpanProperty.StatusCode.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Status, filterToFind.Property.ValueCase);
+            Assert.Equal(EnumCompareAsType.Equals, filterToFind.Property.Status.Code.CompareAs);
+            Assert.Equal(code, filterToFind.Property.Status.Code.Compare);
         }
         
         [Fact]
@@ -209,151 +142,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Kind, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(EnumCompareAsType.Equals, filterToFind.SpanProperty.Kind.CompareAs);
-            Assert.Equal(kind, filterToFind.SpanProperty.Kind.Compare);
-        }
-        
-        [Fact]
-        public void AddUInt32PropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            uint flags = 1000000000;
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Flags, flags, NumberCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Flags, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Flags.CompareAs);
-            Assert.Equal(flags, filterToFind.SpanProperty.Flags.Compare);
-        }
-        
-        [Fact]
-        public void AddKeyValueStringPropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            string key = "service.name";
-            string value = "test";
-            
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, value, StringCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.Attribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.StringValue.Compare);
-        }
-        
-        [Fact]
-        public void AddKeyValueBoolPropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            string key = "service.started";
-            bool value = true;
-            
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, value, BoolCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.Attribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.BoolValue.Compare);
-        }
-        
-        [Fact]
-        public void AddKeyValueInt64PropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            string key = "service.started";
-            long value = 1;
-            
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, value, NumberCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Attribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.Int64Value.Compare);
-        }
-        
-        [Fact]
-        public void AddKeyValueDoublePropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            string key = "service.started";
-            double value = 1;
-            
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, value, NumberCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Attribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.DoubleValue.Compare);
-        }
-        
-        [Fact]
-        public void AddKeyValueByteStringPropertyFilter()
-        {
-            var builder = new SpanQueryRequestBuilder();
-            string key = "trace.parentSpanId";
-            byte[] value = [1, 2, 3, 4, 5, 6, 7, 8];
-            
-            builder.Where(filters =>
-            {
-                filters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Attribute, key, value, ByteStringCompareAsType.Equals);
-            });
-            var request = builder.Build();
-            
-            Assert.NotEmpty(request.Filters);
-            
-            var filterToFind = request.Filters.First();
-            
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.Attribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Kind, filterToFind.Property.ValueCase);
+            Assert.Equal(EnumCompareAsType.Equals, filterToFind.Property.Kind.CompareAs);
+            Assert.Equal(kind, filterToFind.Property.Kind.Compare);
         }
 
         [Fact]
@@ -364,8 +156,8 @@ public class SpanQueryRequestBuilderTests
             {
                 filters.AddOrFilter(orFilters =>
                 {
-                    orFilters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Name, "GET", StringCompareAsType.Equals);
-                    orFilters.AddFilter(WhereSpanPropertyFilter.ValueOneofCase.Name, "POST", StringCompareAsType.Equals);
+                    orFilters.AddSpanNameFilter("GET", StringCompareAsType.Equals);
+                    orFilters.AddSpanNameFilter("POST", StringCompareAsType.Equals);
                 });
             });
             var request = builder.Build();
@@ -374,19 +166,19 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanOr, filterToFind.ValueCase);
+            Assert.Equal(Where.ValueOneofCase.Or, filterToFind.ValueCase);
 
-            var firstOr = filterToFind.SpanOr.Filters[0];
+            var firstOr = filterToFind.Or.Filters[0];
             
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Name, firstOr.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, firstOr.SpanProperty.Name.CompareAs);
-            Assert.Equal("GET", firstOr.SpanProperty.Name.Compare);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Name, firstOr.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, firstOr.Property.Name.CompareAs);
+            Assert.Equal("GET", firstOr.Property.Name.Compare);
             
-            var secondOr = filterToFind.SpanOr.Filters[1];
+            var secondOr = filterToFind.Or.Filters[1];
             
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Name, secondOr.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, secondOr.SpanProperty.Name.CompareAs);
-            Assert.Equal("POST", secondOr.SpanProperty.Name.Compare);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Name, secondOr.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, secondOr.Property.Name.CompareAs);
+            Assert.Equal("POST", secondOr.Property.Name.Compare);
         }
         
         [Fact]
@@ -401,10 +193,10 @@ public class SpanQueryRequestBuilderTests
             var request = builder.Build();
             
             Assert.NotEmpty(request.Filters);
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, request.Filters.First().ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Name, request.Filters.First().SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters.First().SpanProperty.Name.CompareAs);
-            Assert.Equal(name, request.Filters.First().SpanProperty.Name.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters.First().ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Name, request.Filters.First().Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters.First().Property.Name.CompareAs);
+            Assert.Equal(name, request.Filters.First().Property.Name.Compare);
         }
         
         [Fact]
@@ -422,10 +214,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.SpanId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.SpanId.CompareAs);
-            Assert.Equal(spanId, filterToFind.SpanProperty.SpanId.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.SpanId, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.SpanId.CompareAs);
+            Assert.Equal(spanId, filterToFind.Property.SpanId.Compare);
         }
         
         [Fact]
@@ -443,10 +235,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.TraceId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.TraceId.CompareAs);
-            Assert.Equal(traceId, filterToFind.SpanProperty.TraceId.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.TraceId, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.TraceId.CompareAs);
+            Assert.Equal(traceId, filterToFind.Property.TraceId.Compare);
         }
         
         [Fact]
@@ -464,10 +256,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ParentSpanId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.ParentSpanId.CompareAs);
-            Assert.Equal(spanId, filterToFind.SpanProperty.ParentSpanId.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ParentSpanId, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.ParentSpanId.CompareAs);
+            Assert.Equal(spanId, filterToFind.Property.ParentSpanId.Compare);
         }
         
         [Fact]
@@ -485,10 +277,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.StartTimeUnixNano, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.StartTimeUnixNano.CompareAs);
-            Assert.Equal(startTimeUnixNano, filterToFind.SpanProperty.StartTimeUnixNano.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.StartTimeUnixNano, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.StartTimeUnixNano.CompareAs);
+            Assert.Equal(startTimeUnixNano, filterToFind.Property.StartTimeUnixNano.Compare);
         }
         
         [Fact]
@@ -506,10 +298,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EndTimeUnixNano, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.EndTimeUnixNano.CompareAs);
-            Assert.Equal(endTimeUnixNano, filterToFind.SpanProperty.EndTimeUnixNano.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.EndTimeUnixNano, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.EndTimeUnixNano.CompareAs);
+            Assert.Equal(endTimeUnixNano, filterToFind.Property.EndTimeUnixNano.Compare);
         }
         
         [Fact]
@@ -529,11 +321,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.Attribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.StringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attribute, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Attribute.StringValue.Compare);
         }
         
         [Fact]
@@ -553,11 +345,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.Attribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.BoolValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attribute, filterToFind.Property.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.Property.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Attribute.BoolValue.Compare);
         }
         
         [Fact]
@@ -577,11 +369,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Attribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.Int64Value.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attribute, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Attribute.Int64Value.Compare);
         }
         
         [Fact]
@@ -601,11 +393,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Attribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.DoubleValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attribute, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Attribute.DoubleValue.Compare);
         }
         
         [Fact]
@@ -625,11 +417,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Attribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.Attribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.Attribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.Attribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attribute, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Attribute.ByteStringValue.Compare);
         }
         
         [Fact]
@@ -647,10 +439,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventTimeUnixNano, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.EventTimeUnixNano.CompareAs);
-            Assert.Equal(eventTimeUnixNano, filterToFind.SpanProperty.EventTimeUnixNano.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Event.TimeUnixNano.CompareAs);
+            Assert.Equal(eventTimeUnixNano, filterToFind.Property.Event.TimeUnixNano.Compare);
         }
         
         [Fact]
@@ -668,10 +460,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventName, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.EventName.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.EventName.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Event.Name.CompareAs);
+            Assert.Equal(name, filterToFind.Property.Event.Name.Compare);
         }
         
         [Fact]
@@ -689,10 +481,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkTraceState, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.LinkTraceState.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.LinkTraceState.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Link.TraceState.CompareAs);
+            Assert.Equal(name, filterToFind.Property.Link.TraceState.Compare);
         }
         
         [Fact]
@@ -710,10 +502,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.TraceState, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.TraceState.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.TraceState.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.TraceState, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.TraceState.CompareAs);
+            Assert.Equal(name, filterToFind.Property.TraceState.Compare);
         }
         
         [Fact]
@@ -731,10 +523,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeName, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeName.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.InstrumentationScopeName.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Name, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Name.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScope.Name.Compare);
         }
         
         [Fact]
@@ -752,10 +544,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeVersion, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeVersion.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.InstrumentationScopeVersion.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Version, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Version.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScope.Version.Compare);
         }
         
         [Fact]
@@ -773,10 +565,9 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeSchemaUrl, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeSchemaUrl.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.InstrumentationScopeSchemaUrl.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScopeSchemaUrl, filterToFind.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScopeSchemaUrl.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScopeSchemaUrl.Compare);
         }
         
         [Fact]
@@ -794,10 +585,9 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceSchemaUrl, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.ResourceSchemaUrl.CompareAs);
-            Assert.Equal(name, filterToFind.SpanProperty.ResourceSchemaUrl.Compare);
+            Assert.Equal(Where.ValueOneofCase.ResourceSchemaUrl, filterToFind.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.ResourceSchemaUrl.CompareAs);
+            Assert.Equal(name, filterToFind.ResourceSchemaUrl.Compare);
         }
         
         [Fact]
@@ -815,10 +605,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkSpanId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.LinkSpanId.CompareAs);
-            Assert.Equal(spanId, filterToFind.SpanProperty.LinkSpanId.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.Link.SpanId.CompareAs);
+            Assert.Equal(spanId, filterToFind.Property.Link.SpanId.Compare);
         }
         
         [Fact]
@@ -836,10 +626,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkTraceId, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.LinkTraceId.CompareAs);
-            Assert.Equal(traceId, filterToFind.SpanProperty.LinkTraceId.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.Link.TraceId.CompareAs);
+            Assert.Equal(traceId, filterToFind.Property.Link.TraceId.Compare);
         }
         
         [Fact]
@@ -857,10 +647,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkFlags, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.LinkFlags.CompareAs);
-            Assert.Equal(flags, filterToFind.SpanProperty.LinkFlags.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Link.Flags.CompareAs);
+            Assert.Equal(flags, filterToFind.Property.Link.Flags.Compare);
         }
         
         [Fact]
@@ -878,10 +668,10 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.Flags, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.Flags.CompareAs);
-            Assert.Equal(flags, filterToFind.SpanProperty.Flags.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Flags, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Flags.CompareAs);
+            Assert.Equal(flags, filterToFind.Property.Flags.Compare);
         }
         
         // Event attributes
@@ -902,11 +692,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.EventAttribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.EventAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.EventAttribute.StringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Event.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Event.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Event.Attribute.StringValue.Compare);
         }
         
         [Fact]
@@ -926,11 +716,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.EventAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.EventAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.EventAttribute.BoolValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.Property.Event.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Event.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Event.Attribute.BoolValue.Compare);
         }
         
         [Fact]
@@ -950,11 +740,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.EventAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.EventAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.EventAttribute.Int64Value.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Event.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Event.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Event.Attribute.Int64Value.Compare);
         }
         
         [Fact]
@@ -974,11 +764,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.EventAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.EventAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.EventAttribute.DoubleValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Event.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Event.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Event.Attribute.DoubleValue.Compare);
         }
         
         [Fact]
@@ -998,11 +788,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.EventAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.EventAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.EventAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.EventAttribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.Event.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Event.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Event.Attribute.ByteStringValue.Compare);
         }
         
         // Link Attributes
@@ -1023,11 +813,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.LinkAttribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.LinkAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.LinkAttribute.StringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Property.Link.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Link.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Link.Attribute.StringValue.Compare);
         }
         
         [Fact]
@@ -1047,11 +837,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.LinkAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.LinkAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.LinkAttribute.BoolValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.Property.Link.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Link.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Link.Attribute.BoolValue.Compare);
         }
         
         [Fact]
@@ -1071,11 +861,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.LinkAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.LinkAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.LinkAttribute.Int64Value.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Link.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Link.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Link.Attribute.Int64Value.Compare);
         }
         
         [Fact]
@@ -1095,11 +885,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.LinkAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.LinkAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.LinkAttribute.DoubleValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Link.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Link.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Link.Attribute.DoubleValue.Compare);
         }
         
         [Fact]
@@ -1119,11 +909,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.LinkAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.LinkAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.LinkAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.LinkAttribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Link, filterToFind.Property.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Property.Link.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Property.Link.Attribute.Key);
+            Assert.Equal(value, filterToFind.Property.Link.Attribute.ByteStringValue.Compare);
         }
         
         // Scope attributes
@@ -1144,11 +934,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeAttribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.InstrumentationScopeAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.InstrumentationScopeAttribute.StringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.StringValue.Compare);
         }
         
         [Fact]
@@ -1168,11 +958,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.InstrumentationScopeAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.InstrumentationScopeAttribute.BoolValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.BoolValue.Compare);
         }
         
         [Fact]
@@ -1192,11 +982,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.InstrumentationScopeAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.InstrumentationScopeAttribute.Int64Value.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.Int64Value.Compare);
         }
         
         [Fact]
@@ -1216,11 +1006,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.InstrumentationScopeAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.InstrumentationScopeAttribute.DoubleValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.DoubleValue.Compare);
         }
         
         [Fact]
@@ -1240,11 +1030,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.InstrumentationScopeAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.InstrumentationScopeAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.InstrumentationScopeAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.InstrumentationScopeAttribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.ByteStringValue.Compare);
         }
         
         // Resource attributes
@@ -1265,11 +1055,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, filterToFind.SpanProperty.ResourceAttribute.StringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.ResourceAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.ResourceAttribute.StringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Resource.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.StringValue.Compare);
         }
         
         [Fact]
@@ -1289,11 +1079,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, filterToFind.SpanProperty.ResourceAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.ResourceAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.ResourceAttribute.BoolValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.Resource.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.BoolValue.Compare);
         }
         
         [Fact]
@@ -1313,11 +1103,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.ResourceAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.ResourceAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.ResourceAttribute.Int64Value.Compare);
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.Int64Value.Compare);
         }
         
         [Fact]
@@ -1337,11 +1127,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, filterToFind.SpanProperty.ResourceAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.ResourceAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.ResourceAttribute.DoubleValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.DoubleValue.Compare);
         }
         
         [Fact]
@@ -1361,11 +1151,11 @@ public class SpanQueryRequestBuilderTests
             
             var filterToFind = request.Filters.First();
             
-            Assert.Equal(WhereSpanFilter.ValueOneofCase.SpanProperty, filterToFind.ValueCase);
-            Assert.Equal(WhereSpanPropertyFilter.ValueOneofCase.ResourceAttribute, filterToFind.SpanProperty.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.SpanProperty.ResourceAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, filterToFind.SpanProperty.ResourceAttribute.Key);
-            Assert.Equal(value, filterToFind.SpanProperty.ResourceAttribute.ByteStringValue.Compare);
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Resource.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.ByteStringValue.Compare);
         }
     }
 }
