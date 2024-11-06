@@ -1,4 +1,5 @@
 using System;
+using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Trace.V1;
 
 namespace OddDotCSharp
