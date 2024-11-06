@@ -159,7 +159,7 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
         }
         
         [Fact]
-        public void AddDataPointExplicitBoundPropertyFilter()
+        public void AddDataPointZerCountPropertyFilter()
         {
             var builder = new MetricQueryRequestBuilder();
             const ulong value = 123;
@@ -170,6 +170,62 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
             Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.ZeroCount.CompareAs);
             Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.ZeroCount.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointPositiveOffsetPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const int value = 123;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Positive.AddOffsetFilter(value, NumberCompareAsType.Equals)).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Positive.Offset.CompareAs);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Positive.Offset.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointPositiveBucketCountPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const ulong value = 123;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Positive.AddBucketCountFilter(value, NumberCompareAsType.Equals)).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Positive.BucketCount.CompareAs);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Positive.BucketCount.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointNegativeOffsetPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const int value = 123;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Negative.AddOffsetFilter(value, NumberCompareAsType.Equals)).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Negative.Offset.CompareAs);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Negative.Offset.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointNegativeBucketCountPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const ulong value = 123;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Negative.AddBucketCountFilter(value, NumberCompareAsType.Equals)).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Negative.BucketCount.CompareAs);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Negative.BucketCount.Compare);
         }
         
         [Fact]
@@ -362,6 +418,20 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
             Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Max.CompareAs);
             Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Max.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointZeroThresholdPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const double value = 123;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.AddZeroThresholdFilter(value, NumberCompareAsType.Equals)).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.ZeroThreshold.CompareAs);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.ZeroThreshold.Compare);
         }
         
         [Fact]

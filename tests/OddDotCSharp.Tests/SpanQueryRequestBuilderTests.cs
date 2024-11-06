@@ -92,7 +92,7 @@ public class SpanQueryRequestBuilderTests
             const string message = "test";
             builder.Where(filters =>
             {
-                filters.AddSpanStatusMessageFilter(message, StringCompareAsType.Equals);
+                filters.Status.AddMessageFilter(message, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -113,7 +113,7 @@ public class SpanQueryRequestBuilderTests
             Status.Types.StatusCode code = Status.Types.StatusCode.Ok;
             builder.Where(filters =>
             {
-                filters.AddSpanStatusCodeFilter(code, EnumCompareAsType.Equals);
+                filters.Status.AddCodeFilter(code, EnumCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -134,7 +134,7 @@ public class SpanQueryRequestBuilderTests
             Span.Types.SpanKind kind = Span.Types.SpanKind.Internal;
             builder.Where(filters =>
             {
-                filters.AddSpanKindFilter(kind, EnumCompareAsType.Equals);
+                filters.AddKindFilter(kind, EnumCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -156,8 +156,8 @@ public class SpanQueryRequestBuilderTests
             {
                 filters.AddOrFilter(orFilters =>
                 {
-                    orFilters.AddSpanNameFilter("GET", StringCompareAsType.Equals);
-                    orFilters.AddSpanNameFilter("POST", StringCompareAsType.Equals);
+                    orFilters.AddNameFilter("GET", StringCompareAsType.Equals);
+                    orFilters.AddNameFilter("POST", StringCompareAsType.Equals);
                 });
             });
             var request = builder.Build();
@@ -188,7 +188,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddSpanNameFilter(name, StringCompareAsType.Equals);
+                filters.AddNameFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -431,7 +431,7 @@ public class SpanQueryRequestBuilderTests
             ulong eventTimeUnixNano = 1000000000;
             builder.Where(filters =>
             {
-                filters.AddEventTimeUnixNanoFilter(eventTimeUnixNano, NumberCompareAsType.Equals);
+                filters.Event.AddTimeUnixNanoFilter(eventTimeUnixNano, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -452,7 +452,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddEventNameFilter(name, StringCompareAsType.Equals);
+                filters.Event.AddNameFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -467,13 +467,34 @@ public class SpanQueryRequestBuilderTests
         }
         
         [Fact]
+        public void AddEventDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint name = 123;
+            builder.Where(filters =>
+            {
+                filters.Event.AddDroppedAttributesCountFilter(name, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Event, filterToFind.Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Event.DroppedAttributesCount.CompareAs);
+            Assert.Equal(name, filterToFind.Property.Event.DroppedAttributesCount.Compare);
+        }
+        
+        [Fact]
         public void AddLinkTraceStatePropertyFilter()
         {
             var builder = new SpanQueryRequestBuilder();
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddLinkTraceStateFilter(name, StringCompareAsType.Equals);
+                filters.Link.AddTraceStateFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -515,7 +536,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeNameFilter(name, StringCompareAsType.Equals);
+                filters.InstrumentationScope.AddNameFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -536,7 +557,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeVersionFilter(name, StringCompareAsType.Equals);
+                filters.InstrumentationScope.AddVersionFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -557,7 +578,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeSchemaUrlFilter(name, StringCompareAsType.Equals);
+                filters.InstrumentationScope.AddSchemaUrlFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -577,7 +598,7 @@ public class SpanQueryRequestBuilderTests
             const string name = "service1";
             builder.Where(filters =>
             {
-                filters.AddResourceSchemaUrlFilter(name, StringCompareAsType.Equals);
+                filters.Resource.AddSchemaUrlFilter(name, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -597,7 +618,7 @@ public class SpanQueryRequestBuilderTests
             byte[] spanId = [1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
-                filters.AddLinkSpanIdFilter(spanId, ByteStringCompareAsType.Equals);
+                filters.Link.AddSpanIdFilter(spanId, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -618,7 +639,7 @@ public class SpanQueryRequestBuilderTests
             byte[] traceId = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8];
             builder.Where(filters =>
             {
-                filters.AddLinkTraceIdFilter(traceId, ByteStringCompareAsType.Equals);
+                filters.Link.AddTraceIdFilter(traceId, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -639,7 +660,7 @@ public class SpanQueryRequestBuilderTests
             uint flags = 1;
             builder.Where(filters =>
             {
-                filters.AddLinkFlagsFilter(flags, NumberCompareAsType.Equals);
+                filters.Link.AddFlagsFilter(flags, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -684,7 +705,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddEventAttributeFilter(key, value, StringCompareAsType.Equals);
+                filters.Event.AddAttributeFilter(key, value, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -708,7 +729,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddEventAttributeFilter(key, value, BoolCompareAsType.Equals);
+                filters.Event.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -732,7 +753,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddEventAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Event.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -756,7 +777,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddEventAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Event.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -780,7 +801,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddEventAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+                filters.Event.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -805,7 +826,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddLinkAttributeFilter(key, value, StringCompareAsType.Equals);
+                filters.Link.AddAttributeFilter(key, value, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -829,7 +850,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddLinkAttributeFilter(key, value, BoolCompareAsType.Equals);
+                filters.Link.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -853,7 +874,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddLinkAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Link.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -877,7 +898,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddLinkAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Link.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -901,7 +922,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddLinkAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+                filters.Link.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -926,7 +947,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeAttributeFilter(key, value, StringCompareAsType.Equals);
+                filters.InstrumentationScope.AddAttributeFilter(key, value, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -950,7 +971,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeAttributeFilter(key, value, BoolCompareAsType.Equals);
+                filters.InstrumentationScope.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -974,7 +995,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.InstrumentationScope.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -998,7 +1019,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.InstrumentationScope.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1022,7 +1043,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddInstrumentationScopeAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+                filters.InstrumentationScope.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1047,7 +1068,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddResourceAttributeFilter(key, value, StringCompareAsType.Equals);
+                filters.Resource.AddAttributeFilter(key, value, StringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1071,7 +1092,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddResourceAttributeFilter(key, value, BoolCompareAsType.Equals);
+                filters.Resource.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1095,7 +1116,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddResourceAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Resource.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1119,7 +1140,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddResourceAttributeFilter(key, value, NumberCompareAsType.Equals);
+                filters.Resource.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1143,7 +1164,7 @@ public class SpanQueryRequestBuilderTests
             
             builder.Where(filters =>
             {
-                filters.AddResourceAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+                filters.Resource.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
             });
             var request = builder.Build();
             
@@ -1156,6 +1177,126 @@ public class SpanQueryRequestBuilderTests
             Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Resource.Attribute.ByteStringValue.CompareAs);
             Assert.Equal(key, filterToFind.Resource.Attribute.Key);
             Assert.Equal(value, filterToFind.Resource.Attribute.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddResourceDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.Resource.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.Resource.DroppedAttributesCount.Compare);
+        }
+        
+        [Fact]
+        public void AddDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.Property.DroppedAttributesCount.Compare);
+        }
+        
+        [Fact]
+        public void AddDroppedEventsCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.AddDroppedEventsCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.DroppedEventsCount.CompareAs);
+            Assert.Equal(value, filterToFind.Property.DroppedEventsCount.Compare);
+        }
+        
+        [Fact]
+        public void AddDroppedLinksCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.AddDroppedLinksCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.DroppedLinksCount.CompareAs);
+            Assert.Equal(value, filterToFind.Property.DroppedLinksCount.Compare);
+        }
+        
+        [Fact]
+        public void AddInstrumentationScopeDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.InstrumentationScope.DroppedAttributesCount.Compare);
+        }
+        
+        [Fact]
+        public void AddLinkDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new SpanQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.Link.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Property, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Property.Link.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.Property.Link.DroppedAttributesCount.Compare);
         }
     }
 }

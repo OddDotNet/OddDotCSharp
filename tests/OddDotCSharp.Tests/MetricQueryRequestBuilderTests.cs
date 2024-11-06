@@ -1,5 +1,6 @@
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
+using OddDotNet.Proto.Resource.V1;
 
 namespace OddDotCSharp.Tests;
 
@@ -195,6 +196,401 @@ public class MetricQueryRequestBuilderTests
             Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Metadata.ByteStringValue.CompareAs);
             Assert.Equal(key, request.Filters[0].Property.Metadata.Key);
             Assert.Equal(value, request.Filters[0].Property.Metadata.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddOrFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            builder.Where(filters =>
+            {
+                filters.AddOrFilter(orFilters =>
+                {
+                    orFilters.AddNameFilter("GET", StringCompareAsType.Equals);
+                    orFilters.AddNameFilter("POST", StringCompareAsType.Equals);
+                });
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Or, filterToFind.ValueCase);
+
+            var firstOr = filterToFind.Or.Filters[0];
+            
+            Assert.Equal(PropertyFilter.ValueOneofCase.Name, firstOr.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, firstOr.Property.Name.CompareAs);
+            Assert.Equal("GET", firstOr.Property.Name.Compare);
+            
+            var secondOr = filterToFind.Or.Filters[1];
+            
+            Assert.Equal(PropertyFilter.ValueOneofCase.Name, secondOr.Property.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, secondOr.Property.Name.CompareAs);
+            Assert.Equal("POST", secondOr.Property.Name.Compare);
+        }
+        
+        [Fact]
+        public void AddInstrumentationScopeNamePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string name = "service1";
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddNameFilter(name, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Name, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Name.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScope.Name.Compare);
+        }
+        
+        [Fact]
+        public void AddStringInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.name";
+            string value = "test";
+            
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddAttributeFilter(key, value, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.StringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddBoolInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            bool value = true;
+            
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.BoolValue.Compare);
+        }
+        
+        [Fact]
+        public void AddInt64InstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            long value = 1;
+            
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.Int64Value.Compare);
+        }
+        
+        [Fact]
+        public void AddDoubleInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            double value = 1;
+            
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddByteStringInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.name";
+            byte[] value = [1, 2, 3, 4];
+            
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attribute, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.InstrumentationScope.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.InstrumentationScope.Attribute.Key);
+            Assert.Equal(value, filterToFind.InstrumentationScope.Attribute.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddInstrumentationScopeVersionPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string name = "service1";
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddVersionFilter(name, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Version, filterToFind.InstrumentationScope.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScope.Version.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScope.Version.Compare);
+        }
+        
+        [Fact]
+        public void AddInstrumentationScopeSchemaUrlPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string name = "service1";
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddSchemaUrlFilter(name, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScopeSchemaUrl, filterToFind.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.InstrumentationScopeSchemaUrl.CompareAs);
+            Assert.Equal(name, filterToFind.InstrumentationScopeSchemaUrl.Compare);
+        }
+        
+        [Fact]
+        public void AddInstrumentationScopeDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.InstrumentationScope.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.InstrumentationScope.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.InstrumentationScope.DroppedAttributesCount.Compare);
+        }
+        
+        [Fact]
+        public void AddResourceSchemaUrlPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string name = "service1";
+            builder.Where(filters =>
+            {
+                filters.Resource.AddSchemaUrlFilter(name, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.ResourceSchemaUrl, filterToFind.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.ResourceSchemaUrl.CompareAs);
+            Assert.Equal(name, filterToFind.ResourceSchemaUrl.Compare);
+        }
+        
+        [Fact]
+        public void AddStringResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.name";
+            string value = "test";
+            
+            builder.Where(filters =>
+            {
+                filters.Resource.AddAttributeFilter(key, value, StringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(StringCompareAsType.Equals, filterToFind.Resource.Attribute.StringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.StringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddBoolResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            bool value = true;
+            
+            builder.Where(filters =>
+            {
+                filters.Resource.AddAttributeFilter(key, value, BoolCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(BoolCompareAsType.Equals, filterToFind.Resource.Attribute.BoolValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.BoolValue.Compare);
+        }
+        
+        [Fact]
+        public void AddInt64ResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            long value = 1;
+            
+            builder.Where(filters =>
+            {
+                filters.Resource.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.Attribute.Int64Value.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.Int64Value.Compare);
+        }
+        
+        [Fact]
+        public void AddDoubleResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.started";
+            double value = 1;
+            
+            builder.Where(filters =>
+            {
+                filters.Resource.AddAttributeFilter(key, value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.Attribute.DoubleValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddByteStringResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            string key = "service.name";
+            byte[] value = [1, 2, 3, 4];
+            
+            builder.Where(filters =>
+            {
+                filters.Resource.AddAttributeFilter(key, value, ByteStringCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attribute, filterToFind.Resource.ValueCase);
+            Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Resource.Attribute.ByteStringValue.CompareAs);
+            Assert.Equal(key, filterToFind.Resource.Attribute.Key);
+            Assert.Equal(value, filterToFind.Resource.Attribute.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddResourceDroppedAttributesCountPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const uint value = 123;
+            builder.Where(filters =>
+            {
+                filters.Resource.AddDroppedAttributesCountFilter(value, NumberCompareAsType.Equals);
+            });
+            var request = builder.Build();
+            
+            Assert.NotEmpty(request.Filters);
+            
+            var filterToFind = request.Filters.First();
+            
+            Assert.Equal(Where.ValueOneofCase.Resource, filterToFind.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, filterToFind.Resource.DroppedAttributesCount.CompareAs);
+            Assert.Equal(value, filterToFind.Resource.DroppedAttributesCount.Compare);
         }
     }
 }

@@ -4,19 +4,15 @@ using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
-    public class WhereMetricExponentialHistogramDataPointFilterConfigurator
+    public class WhereMetricSummaryDataPointFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
-        public WhereMetricExponentialHistogramDataPointExemplarFilterConfigurator Exemplar { get; }
-        public WhereMetricExponentialHistogramDataPointBucketFilterConfigurator Positive { get; }
-        public WhereMetricExponentialHistogramDataPointBucketFilterConfigurator Negative { get; }
+        public WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator ValueAtQuantile { get;  }
 
-        public WhereMetricExponentialHistogramDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        public WhereMetricSummaryDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
-            Exemplar = new WhereMetricExponentialHistogramDataPointExemplarFilterConfigurator(configurator);
-            Positive = new WhereMetricExponentialHistogramDataPointBucketFilterConfigurator(configurator, ExponentialHistogramDataPointBucket.Positive);
-            Negative = new WhereMetricExponentialHistogramDataPointBucketFilterConfigurator(configurator, ExponentialHistogramDataPointBucket.Negative);
+            ValueAtQuantile = new WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator(configurator);
         }
         
         /// <summary>
@@ -33,9 +29,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Attribute = new KeyValueProperty
                             {
@@ -69,9 +65,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Attribute = new KeyValueProperty
                             {
@@ -105,9 +101,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Attribute = new KeyValueProperty
                             {
@@ -141,9 +137,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Attribute = new KeyValueProperty
                             {
@@ -177,9 +173,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Attribute = new KeyValueProperty
                             {
@@ -211,9 +207,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             StartTimeUnixNano = new UInt64Property
                             {
@@ -241,9 +237,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             TimeUnixNano = new UInt64Property
                             {
@@ -271,9 +267,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Count = new UInt64Property
                             {
@@ -301,9 +297,9 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Sum = new DoubleProperty
                             {
@@ -320,69 +316,9 @@ namespace OddDotCSharp
         }
         
         /// <summary>
-        /// Adds a filter for Scale to the list of filters.
-        /// </summary>
-        /// <param name="compare">The int to compare the Scale against.</param>
-        /// <param name="compareAs">The type of comparison to perform.</param>
-        /// <returns>this <see cref="WhereMetricFilterConfigurator"/></returns>
-        public WhereMetricFilterConfigurator AddScaleFilter(int compare, NumberCompareAsType compareAs)
-        {
-            var filter = new Where
-            {
-                Property = new PropertyFilter
-                {
-                    ExponentialHistogram = new ExponentialHistogramFilter
-                    {
-                        DataPoint = new ExponentialHistogramDataPointFilter
-                        {
-                            Scale = new Int32Property
-                            {
-                                CompareAs = compareAs,
-                                Compare = compare
-                            }
-                        }
-                    }
-                }
-            };
-            
-            _configurator.Filters.Add(filter);
-            return _configurator;
-        }
-        
-        /// <summary>
-        /// Adds a filter for ZeroCount to the list of filters.
-        /// </summary>
-        /// <param name="compare">The ulong to compare the ZeroCount against.</param>
-        /// <param name="compareAs">The type of comparison to perform.</param>
-        /// <returns>this <see cref="WhereMetricFilterConfigurator"/></returns>
-        public WhereMetricFilterConfigurator AddZeroCountFilter(ulong compare, NumberCompareAsType compareAs)
-        {
-            var filter = new Where
-            {
-                Property = new PropertyFilter
-                {
-                    ExponentialHistogram = new ExponentialHistogramFilter
-                    {
-                        DataPoint = new ExponentialHistogramDataPointFilter
-                        {
-                            ZeroCount = new UInt64Property
-                            {
-                                CompareAs = compareAs,
-                                Compare = compare
-                            }
-                        }
-                    }
-                }
-            };
-            
-            _configurator.Filters.Add(filter);
-            return _configurator;
-        }
-        
-        /// <summary>
         /// Adds a filter for Flags to the list of filters.
         /// </summary>
-        /// <param name="compare">The long to compare the Flags against.</param>
+        /// <param name="compare">The uint to compare the Flags against.</param>
         /// <param name="compareAs">The type of comparison to perform.</param>
         /// <returns>this <see cref="WhereMetricFilterConfigurator"/></returns>
         public WhereMetricFilterConfigurator AddFlagsFilter(uint compare, NumberCompareAsType compareAs)
@@ -391,71 +327,11 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    ExponentialHistogram = new ExponentialHistogramFilter
+                    Summary = new SummaryFilter
                     {
-                        DataPoint = new ExponentialHistogramDataPointFilter
+                        DataPoint = new SummaryDataPointFilter
                         {
                             Flags = new UInt32Property
-                            {
-                                CompareAs = compareAs,
-                                Compare = compare
-                            }
-                        }
-                    }
-                }
-            };
-            
-            _configurator.Filters.Add(filter);
-            return _configurator;
-        }
-        
-        /// <summary>
-        /// Adds a filter for Min to the list of filters.
-        /// </summary>
-        /// <param name="compare">The double to compare the Min against.</param>
-        /// <param name="compareAs">The type of comparison to perform.</param>
-        /// <returns>this <see cref="WhereMetricFilterConfigurator"/></returns>
-        public WhereMetricFilterConfigurator AddMinFilter(double compare, NumberCompareAsType compareAs)
-        {
-            var filter = new Where
-            {
-                Property = new PropertyFilter
-                {
-                    ExponentialHistogram = new ExponentialHistogramFilter
-                    {
-                        DataPoint = new ExponentialHistogramDataPointFilter
-                        {
-                            Min = new DoubleProperty
-                            {
-                                CompareAs = compareAs,
-                                Compare = compare
-                            }
-                        }
-                    }
-                }
-            };
-            
-            _configurator.Filters.Add(filter);
-            return _configurator;
-        }
-        
-        /// <summary>
-        /// Adds a filter for Max to the list of filters.
-        /// </summary>
-        /// <param name="compare">The double to compare the Max against.</param>
-        /// <param name="compareAs">The type of comparison to perform.</param>
-        /// <returns>this <see cref="WhereMetricFilterConfigurator"/></returns>
-        public WhereMetricFilterConfigurator AddMaxFilter(double compare, NumberCompareAsType compareAs)
-        {
-            var filter = new Where
-            {
-                Property = new PropertyFilter
-                {
-                    ExponentialHistogram = new ExponentialHistogramFilter
-                    {
-                        DataPoint = new ExponentialHistogramDataPointFilter
-                        {
-                            Max = new DoubleProperty
                             {
                                 CompareAs = compareAs,
                                 Compare = compare

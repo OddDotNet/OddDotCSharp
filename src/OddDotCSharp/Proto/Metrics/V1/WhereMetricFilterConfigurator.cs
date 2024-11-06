@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Google.Protobuf;
 using OddDotNet.Proto.Common.V1;
@@ -12,6 +13,9 @@ namespace OddDotCSharp
         public WhereMetricSumFilterConfigurator Sum { get; }
         public WhereMetricHistogramFilterConfigurator Histogram { get; }
         public WhereMetricExponentialHistogramFilterConfigurator ExponentialHistogram { get; }
+        public WhereMetricSummaryFilterConfigurator Summary { get; }
+        public WhereMetricInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
+        public WhereMetricResourceFilterConfigurator Resource { get; }
 
         public WhereMetricFilterConfigurator()
         {
@@ -19,6 +23,9 @@ namespace OddDotCSharp
             Sum = new WhereMetricSumFilterConfigurator(this);
             Histogram = new WhereMetricHistogramFilterConfigurator(this);
             ExponentialHistogram = new WhereMetricExponentialHistogramFilterConfigurator(this);
+            Summary = new WhereMetricSummaryFilterConfigurator(this);
+            InstrumentationScope = new WhereMetricInstrumentationScopeFilterConfigurator(this);
+            Resource = new WhereMetricResourceFilterConfigurator(this);
         }
         
         /// <summary>
@@ -239,6 +246,29 @@ namespace OddDotCSharp
                 }
             };
                     
+            Filters.Add(filter);
+            return this;
+        }
+        
+        /// <summary>
+        /// Add a <see cref="OrFilter"/> filter to the list of filters.
+        /// </summary>
+        /// <param name="configure">Action used to configure the filters. This action behaves the same way as
+        /// the action passed to the Where() method. See <see cref="MetricQueryRequestBuilder.Where"/>.</param>
+        /// <returns>this <see cref="WhereMetricFilterConfigurator"/>.</returns>
+        public WhereMetricFilterConfigurator AddOrFilter(Action<WhereMetricFilterConfigurator> configure)
+        {
+            var configurator = new WhereMetricFilterConfigurator();
+            configure(configurator);
+
+            var orFilter = new OrFilter();
+            orFilter.Filters.AddRange(configurator.Filters);
+
+            var filter = new Where
+            {
+                Or = orFilter
+            };
+            
             Filters.Add(filter);
             return this;
         }
