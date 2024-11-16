@@ -10,12 +10,12 @@ namespace OddDotCSharp
     public class WhereLogFilterConfigurator
     {
         internal List<Where> Filters { get; } = new List<Where>();
-        public WhereLogInstrumentationScopeFilterconfigurator InstrumentationScope { get; }
+        public WhereLogInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
         public WhereLogResourceFilterConfigurator Resource { get; }
 
         public WhereLogFilterConfigurator()
         {
-            InstrumentationScope = new WhereLogInstrumentationScopeFilterconfigurator(this);
+            InstrumentationScope = new WhereLogInstrumentationScopeFilterConfigurator(this);
             Resource = new WhereLogResourceFilterConfigurator(this);
         }
         

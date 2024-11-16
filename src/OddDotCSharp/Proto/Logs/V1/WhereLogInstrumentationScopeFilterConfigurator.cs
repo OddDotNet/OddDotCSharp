@@ -4,11 +4,11 @@ using OddDotNet.Proto.Logs.V1;
 
 namespace OddDotCSharp
 {
-    public class WhereLogInstrumentationScopeFilterconfigurator
+    public class WhereLogInstrumentationScopeFilterConfigurator
     {
         private readonly WhereLogFilterConfigurator _configurator;
 
-        public WhereLogInstrumentationScopeFilterconfigurator(WhereLogFilterConfigurator configurator)
+        public WhereLogInstrumentationScopeFilterConfigurator(WhereLogFilterConfigurator configurator)
         {
             _configurator = configurator;
         }
