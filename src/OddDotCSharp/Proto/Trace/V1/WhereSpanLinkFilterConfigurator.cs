@@ -138,13 +138,22 @@ namespace OddDotCSharp
                 {
                     Link = new LinkFilter
                     {
-                        Attribute = new KeyValueProperty
+                        Attributes = new KeyValueListProperty
                         {
-                            Key = key,
-                            StringValue = new StringProperty
+                            Values =
                             {
-                                CompareAs = compareAs,
-                                Compare = compare
+                                new KeyValueProperty
+                                {
+                                    Key = key,
+                                    Value = new AnyValueProperty
+                                    {
+                                        StringValue = new StringProperty
+                                        {
+                                            CompareAs = compareAs,
+                                            Compare = compare
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -170,13 +179,22 @@ namespace OddDotCSharp
                 {
                     Link = new LinkFilter
                     {
-                        Attribute = new KeyValueProperty
+                        Attributes = new KeyValueListProperty
                         {
-                            Key = key,
-                            Int64Value = new Int64Property
+                            Values =
                             {
-                                CompareAs = compareAs,
-                                Compare = compare
+                                new KeyValueProperty
+                                {
+                                    Key = key,
+                                    Value = new AnyValueProperty
+                                    {
+                                        IntValue = new Int64Property
+                                        {
+                                            CompareAs = compareAs,
+                                            Compare = compare
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -202,13 +220,22 @@ namespace OddDotCSharp
                 {
                     Link = new LinkFilter
                     {
-                        Attribute = new KeyValueProperty
+                        Attributes = new KeyValueListProperty
                         {
-                            Key = key,
-                            BoolValue = new BoolProperty
+                            Values =
                             {
-                                CompareAs = compareAs,
-                                Compare = compare
+                                new KeyValueProperty
+                                {
+                                    Key = key,
+                                    Value = new AnyValueProperty
+                                    {
+                                        BoolValue = new BoolProperty
+                                        {
+                                            CompareAs = compareAs,
+                                            Compare = compare
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -234,13 +261,22 @@ namespace OddDotCSharp
                 {
                     Link = new LinkFilter
                     {
-                        Attribute = new KeyValueProperty
+                        Attributes = new KeyValueListProperty
                         {
-                            Key = key,
-                            DoubleValue = new DoubleProperty
+                            Values =
                             {
-                                CompareAs = compareAs,
-                                Compare = compare
+                                new KeyValueProperty
+                                {
+                                    Key = key,
+                                    Value = new AnyValueProperty
+                                    {
+                                        DoubleValue = new DoubleProperty
+                                        {
+                                            CompareAs = compareAs,
+                                            Compare = compare
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -266,13 +302,22 @@ namespace OddDotCSharp
                 {
                     Link = new LinkFilter
                     {
-                        Attribute = new KeyValueProperty
+                        Attributes = new KeyValueListProperty
                         {
-                            Key = key,
-                            ByteStringValue = new ByteStringProperty
+                            Values =
                             {
-                                CompareAs = compareAs,
-                                Compare = ByteString.CopyFrom(compare)
+                                new KeyValueProperty
+                                {
+                                    Key = key,
+                                    Value = new AnyValueProperty
+                                    {
+                                        ByteStringValue = new ByteStringProperty
+                                        {
+                                            CompareAs = compareAs,
+                                            Compare = ByteString.CopyFrom(compare)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
