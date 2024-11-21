@@ -297,6 +297,144 @@ public class LogQueryRequestBuilderTests
         }
         
         [Fact]
+        public void AddArrayBodyPropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string stringValue = "test";
+            const long intValue = 123;
+            byte[] byteValue = [1, 2, 3];
+            const double doubleValue = 123.0;
+            const double anotherDoubleValue = 456.0;
+            const bool boolValue = true;
+            const string key = "key";
+            var request = builder.Where(filters =>
+            {
+                filters.AddBodyArrayFilter(arrayFilters =>
+                {
+                    arrayFilters
+                        .AddFilter(doubleValue, NumberCompareAsType.Equals) // index 0
+                        .AddFilter(stringValue, StringCompareAsType.Equals) // 1
+                        .AddFilter(intValue, NumberCompareAsType.Equals) // 2
+                        .AddFilter(byteValue, ByteStringCompareAsType.Equals) // 3
+                        .AddFilter(boolValue, BoolCompareAsType.Equals) // 4
+                        .AddArrayFilter(moreArrayFilters =>
+                        {
+                            moreArrayFilters.AddFilter(anotherDoubleValue, NumberCompareAsType.Equals);
+                        }) // 5
+                        .AddKeyValueListFilter(keyValueListFilters =>
+                        {
+                            keyValueListFilters.AddFilter(key, stringValue, StringCompareAsType.Equals);
+                        }); // 6
+                });
+            }).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Body, request.Filters[0].Property.ValueCase);
+            
+            // Check the double value
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(doubleValue, request.Filters[0].Property.Body.ArrayValue.Values[0].DoubleValue.Compare);
+            
+            // Check the string value
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[1].StringValue.CompareAs);
+            Assert.Equal(stringValue, request.Filters[0].Property.Body.ArrayValue.Values[1].StringValue.Compare);
+            
+            // Check the int value
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[2].IntValue.CompareAs);
+            Assert.Equal(intValue, request.Filters[0].Property.Body.ArrayValue.Values[2].IntValue.Compare);
+            
+            // Check the ByteString value
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[3].ByteStringValue.CompareAs);
+            Assert.Equal(byteValue, request.Filters[0].Property.Body.ArrayValue.Values[3].ByteStringValue.Compare);
+            
+            // Check the bool value
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[4].BoolValue.CompareAs);
+            Assert.Equal(boolValue, request.Filters[0].Property.Body.ArrayValue.Values[4].BoolValue.Compare);
+            
+            // Check the ArrayValue value
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[5].ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(anotherDoubleValue, request.Filters[0].Property.Body.ArrayValue.Values[5].ArrayValue.Values[0].DoubleValue.Compare);
+            
+            // Check the KeyValueList value
+            Assert.Equal(key, request.Filters[0].Property.Body.ArrayValue.Values[6].KvlistValue.Values[0].Key);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Body.ArrayValue.Values[6].KvlistValue.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(stringValue, request.Filters[0].Property.Body.ArrayValue.Values[6].KvlistValue.Values[0].Value.StringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListBodyPropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string stringValue = "test";
+            const long intValue = 123;
+            byte[] byteValue = [1, 2, 3];
+            const double doubleValue = 123.0;
+            const double anotherDoubleValue = 456.0;
+            const bool boolValue = true;
+            const string key = "key";
+            var request = builder.Where(filters =>
+            {
+                filters.AddBodyKeyValueListFilter(keyValueListFilters =>
+                {
+                    keyValueListFilters
+                        .AddFilter(key, stringValue, StringCompareAsType.Equals) // Index 0
+                        .AddFilter(key, intValue, NumberCompareAsType.Equals) // 1
+                        .AddFilter(key, byteValue, ByteStringCompareAsType.Equals) // 2
+                        .AddFilter(key, doubleValue, NumberCompareAsType.Equals) // 3
+                        .AddFilter(key, boolValue, BoolCompareAsType.Equals) // 4
+                        .AddArrayFilter(key, arrayFilters =>
+                        {
+                            arrayFilters.AddFilter(stringValue, StringCompareAsType.Equals);
+                        }) // 5
+                        .AddKeyValueListFilter(key, kvlFilters =>
+                        {
+                            kvlFilters.AddFilter(key, stringValue, StringCompareAsType.Equals);
+                        }); // 6
+                });
+            }).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Body, request.Filters[0].Property.ValueCase);
+            
+            // 1st KV - Index 0
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[0].Key);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(stringValue, request.Filters[0].Property.Body.KvlistValue.Values[0].Value.StringValue.Compare);
+            
+            // 2nd KV - Index 1
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[1].Key);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[1].Value.IntValue.CompareAs);
+            Assert.Equal(intValue, request.Filters[0].Property.Body.KvlistValue.Values[1].Value.IntValue.Compare);
+            
+            // 3rd KV - Index 2
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[2].Key);
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[2].Value.ByteStringValue.CompareAs);
+            Assert.Equal(byteValue, request.Filters[0].Property.Body.KvlistValue.Values[2].Value.ByteStringValue.Compare);
+            
+            // 4th KV - Index 3
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[3].Key);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[3].Value.DoubleValue.CompareAs);
+            Assert.Equal(doubleValue, request.Filters[0].Property.Body.KvlistValue.Values[3].Value.DoubleValue.Compare);
+            
+            // 5th KV - Index 4
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[4].Key);
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[4].Value.BoolValue.CompareAs);
+            Assert.Equal(boolValue, request.Filters[0].Property.Body.KvlistValue.Values[4].Value.BoolValue.Compare);
+            
+            // 6th KV - Index 5
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[5].Key);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[5].Value.ArrayValue.Values[0].StringValue.CompareAs);
+            Assert.Equal(stringValue, request.Filters[0].Property.Body.KvlistValue.Values[5].Value.ArrayValue.Values[0].StringValue.Compare);
+            
+            // 7th KV - Index 6
+            Assert.Equal(key, request.Filters[0].Property.Body.KvlistValue.Values[6].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Body.KvlistValue.Values[6].Value.KvlistValue.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(stringValue, request.Filters[0].Property.Body.KvlistValue.Values[6].Value.KvlistValue.Values[0].Value.StringValue.Compare);
+        }
+        
+        [Fact]
         public void AddDroppedAttributesCountPropertyFilter()
         {
             var builder = new LogQueryRequestBuilder();

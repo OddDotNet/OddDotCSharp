@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Logs.V1;
 using OpenTelemetry.Proto.Logs.V1;
@@ -13,10 +14,15 @@ namespace OddDotCSharp
         public WhereLogInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
         public WhereLogResourceFilterConfigurator Resource { get; }
 
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
+
         public WhereLogFilterConfigurator()
         {
             InstrumentationScope = new WhereLogInstrumentationScopeFilterConfigurator(this);
             Resource = new WhereLogResourceFilterConfigurator(this);
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -246,6 +252,52 @@ namespace OddDotCSharp
                 }
             };
             
+            Filters.Add(filter);
+            return this;
+        }
+      
+        /// <summary>
+        /// Adds a filter for Body to the list of filters.
+        /// </summary>
+        /// <param name="configure">The <see cref="ArrayValueFilterConfigurator"/> used for configuring the filter.</param>
+        /// <returns>This <see cref="WhereLogFilterConfigurator"/></returns>
+        public WhereLogFilterConfigurator AddBodyArrayFilter(Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Body = new AnyValueProperty
+                    {
+                        ArrayValue = new ArrayValueProperty()
+                    }
+                }
+            };
+            filter.Property.Body.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
+        
+        /// <summary>
+        /// Adds a filter for Body to the list of filters.
+        /// </summary>
+        /// <param name="configure">The <see cref="KeyValueListFilterConfigurator"/> used for configuring the filter.</param>
+        /// <returns>This <see cref="WhereLogFilterConfigurator"/></returns>
+        public WhereLogFilterConfigurator AddBodyKeyValueListFilter(Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Body = new AnyValueProperty
+                    {
+                        KvlistValue = new KeyValueListProperty()
+                    }
+                }
+            };
+            filter.Property.Body.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             Filters.Add(filter);
             return this;
         }
