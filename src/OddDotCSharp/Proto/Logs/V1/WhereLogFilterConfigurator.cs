@@ -491,6 +491,64 @@ namespace OddDotCSharp
             Filters.Add(filter);
             return this;
         }
+
+        public WhereLogFilterConfigurator AddAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Attributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
+        
+        public WhereLogFilterConfigurator AddAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Attributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
         
         /// <summary>
         /// Adds a filter for DroppedAttributesCount to the list of filters.

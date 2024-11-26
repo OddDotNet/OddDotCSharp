@@ -216,14 +216,37 @@ public class LogQueryRequestBuilderTests
             var builder = new LogQueryRequestBuilder();
             const string key = "key";
             const double value = 123.0;
-            var request = builder.Where(filters => filters.AddAttributeFilter(key, value, NumberCompareAsType.Equals)).Build();
+            var request = builder.Where(filters => filters.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
             
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Attributes, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Attributes.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
             Assert.Equal(key, request.Filters[0].Property.Attributes.Values[0].Key);
-            Assert.Equal(value, request.Filters[0].Property.Attributes.Values[0].Value.DoubleValue.Compare);
+            Assert.Equal(value, request.Filters[0].Property.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListAttributePropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Attributes, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Property.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -667,6 +690,45 @@ public class LogQueryRequestBuilderTests
         }
         
         [Fact]
+        public void AddArrayValueInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.InstrumentationScope.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, request.Filters[0].ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attributes, request.Filters[0].InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.InstrumentationScope.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, request.Filters[0].ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attributes, request.Filters[0].InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
+        }
+        
+        [Fact]
         public void AddInstrumentationScopeVersionPropertyFilter()
         {
             var builder = new LogQueryRequestBuilder();
@@ -865,6 +927,45 @@ public class LogQueryRequestBuilderTests
             Assert.Equal(ByteStringCompareAsType.Equals, filterToFind.Resource.Attributes.Values[0].Value.ByteStringValue.CompareAs);
             Assert.Equal(key, filterToFind.Resource.Attributes.Values[0].Key);
             Assert.Equal(value, filterToFind.Resource.Attributes.Values[0].Value.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddArrayValueResourceAttributePropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Resource.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Resource, request.Filters[0].ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attributes, request.Filters[0].Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Resource.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Resource.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListResourceAttributePropertyFilter()
+        {
+            var builder = new LogQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Resource.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Resource, request.Filters[0].ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attributes, request.Filters[0].Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
