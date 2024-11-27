@@ -1,4 +1,6 @@
+using System;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
@@ -7,10 +9,15 @@ namespace OddDotCSharp
     public class WhereMetricHistogramDataPointExemplarFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
         public WhereMetricHistogramDataPointExemplarFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -249,6 +256,82 @@ namespace OddDotCSharp
                 }
             };
                     
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereMetricFilterConfigurator AddFilteredAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Histogram = new HistogramFilter
+                    {
+                        DataPoint = new HistogramDataPointFilter
+                        {
+                            Exemplar = new ExemplarFilter
+                            {
+                                FilteredAttributes = new KeyValueListProperty
+                                {
+                                    Values =
+                                    {
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                ArrayValue = new ArrayValueProperty()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Histogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereMetricFilterConfigurator AddFilteredAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Histogram = new HistogramFilter
+                    {
+                        DataPoint = new HistogramDataPointFilter
+                        {
+                            Exemplar = new ExemplarFilter
+                            {
+                                FilteredAttributes = new KeyValueListProperty
+                                {
+                                    Values =
+                                    {
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                KvlistValue = new KeyValueListProperty()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Histogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             _configurator.Filters.Add(filter);
             return _configurator;
         }
