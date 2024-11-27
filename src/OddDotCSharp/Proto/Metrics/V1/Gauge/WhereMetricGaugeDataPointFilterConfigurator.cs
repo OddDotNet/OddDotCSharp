@@ -1,4 +1,6 @@
+using System;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
@@ -8,11 +10,16 @@ namespace OddDotCSharp
     {
         private readonly WhereMetricFilterConfigurator _configurator;
         public WhereMetricGaugeDataPointExemplarFilterConfigurator Exemplar { get; }
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
         public WhereMetricGaugeDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             Exemplar = new WhereMetricGaugeDataPointExemplarFilterConfigurator(configurator);
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -236,6 +243,76 @@ namespace OddDotCSharp
                 }
             };
                     
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereMetricFilterConfigurator AddAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Gauge = new GaugeFilter
+                    {
+                        DataPoint = new NumberDataPointFilter
+                        {
+                            Attributes = new KeyValueListProperty
+                            {
+                                Values =
+                                {
+                                    new KeyValueProperty
+                                    {
+                                        Key = key,
+                                        Value = new AnyValueProperty
+                                        {
+                                            ArrayValue = new ArrayValueProperty()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Gauge.DataPoint.Attributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereMetricFilterConfigurator AddAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Gauge = new GaugeFilter
+                    {
+                        DataPoint = new NumberDataPointFilter
+                        {
+                            Attributes = new KeyValueListProperty
+                            {
+                                Values =
+                                {
+                                    new KeyValueProperty
+                                    {
+                                        Key = key,
+                                        Value = new AnyValueProperty
+                                        {
+                                            KvlistValue = new KeyValueListProperty()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Gauge.DataPoint.Attributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             _configurator.Filters.Add(filter);
             return _configurator;
         }
