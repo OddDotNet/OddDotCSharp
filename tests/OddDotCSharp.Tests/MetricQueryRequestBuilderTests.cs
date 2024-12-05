@@ -412,6 +412,45 @@ public class MetricQueryRequestBuilderTests
         }
         
         [Fact]
+        public void AddArrayInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.InstrumentationScope.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, request.Filters[0].ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attributes, request.Filters[0].InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListInstrumentationScopeAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.InstrumentationScope.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.InstrumentationScope, request.Filters[0].ValueCase);
+            Assert.Equal(InstrumentationScopeFilter.ValueOneofCase.Attributes, request.Filters[0].InstrumentationScope.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
+        }
+        
+        [Fact]
         public void AddInstrumentationScopeVersionPropertyFilter()
         {
             var builder = new MetricQueryRequestBuilder();
