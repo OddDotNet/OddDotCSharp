@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
@@ -16,6 +17,9 @@ namespace OddDotCSharp
         public WhereMetricSummaryFilterConfigurator Summary { get; }
         public WhereMetricInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
         public WhereMetricResourceFilterConfigurator Resource { get; }
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
         public WhereMetricFilterConfigurator()
         {
@@ -26,6 +30,9 @@ namespace OddDotCSharp
             Summary = new WhereMetricSummaryFilterConfigurator(this);
             InstrumentationScope = new WhereMetricInstrumentationScopeFilterConfigurator(this);
             Resource = new WhereMetricResourceFilterConfigurator(this);
+            
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -291,6 +298,64 @@ namespace OddDotCSharp
                 }
             };
                     
+            Filters.Add(filter);
+            return this;
+        }
+        
+        public WhereMetricFilterConfigurator AddMetadataArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Metadata = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Metadata.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
+        
+        public WhereMetricFilterConfigurator AddMetadataKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Metadata = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Metadata.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             Filters.Add(filter);
             return this;
         }
