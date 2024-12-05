@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Trace.V1;
 using OpenTelemetry.Proto.Trace.V1;
@@ -16,6 +17,9 @@ namespace OddDotCSharp
         public WhereSpanResourceFilterConfigurator Resource { get; }
         public WhereSpanStatusFilterConfigurator Status { get; }
         public WhereSpanInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
         public WhereSpanFilterConfigurator()
         {
@@ -24,6 +28,8 @@ namespace OddDotCSharp
             Resource = new WhereSpanResourceFilterConfigurator(this);
             Status = new WhereSpanStatusFilterConfigurator(this);
             InstrumentationScope = new WhereSpanInstrumentationScopeFilterConfigurator(this);
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -410,6 +416,64 @@ namespace OddDotCSharp
                 }
             };
             
+            Filters.Add(filter);
+            return this;
+        }
+        
+        public WhereSpanFilterConfigurator AddAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Attributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
+        
+        public WhereSpanFilterConfigurator AddAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Attributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             Filters.Add(filter);
             return this;
         }

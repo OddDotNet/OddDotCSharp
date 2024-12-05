@@ -1,4 +1,6 @@
+using System;
 using Google.Protobuf;
+using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Resource.V1;
 using OddDotNet.Proto.Trace.V1;
@@ -8,10 +10,15 @@ namespace OddDotCSharp
     public class WhereSpanResourceFilterConfigurator
     {
         private readonly WhereSpanFilterConfigurator _configurator;
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
         public WhereSpanResourceFilterConfigurator(WhereSpanFilterConfigurator configurator)
         {
             _configurator = configurator;
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -247,6 +254,64 @@ namespace OddDotCSharp
                 }
             };
             
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereSpanFilterConfigurator AddAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Resource = new ResourceFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Resource.Attributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        public WhereSpanFilterConfigurator AddAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Resource = new ResourceFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Resource.Attributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             _configurator.Filters.Add(filter);
             return _configurator;
         }
