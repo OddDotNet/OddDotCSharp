@@ -652,6 +652,45 @@ public class MetricQueryRequestBuilderTests
         }
         
         [Fact]
+        public void AddArrayResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Resource.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Resource, request.Filters[0].ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attributes, request.Filters[0].Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Resource.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Resource.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddKeyValueListResourceAttributePropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Resource.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Resource, request.Filters[0].ValueCase);
+            Assert.Equal(ResourceFilter.ValueOneofCase.Attributes, request.Filters[0].Resource.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Resource.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
+        }
+        
+        [Fact]
         public void AddResourceDroppedAttributesCountPropertyFilter()
         {
             var builder = new MetricQueryRequestBuilder();
