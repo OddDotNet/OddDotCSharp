@@ -3,11 +3,14 @@ using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Allows for configuring filters related to the DataPoint Bucket of an ExponentialHistogram.
+    /// </summary>
     public class WhereMetricExponentialHistogramDataPointBucketFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
         private readonly ExponentialHistogramDataPointBucket _bucketType;
-        public WhereMetricExponentialHistogramDataPointBucketFilterConfigurator(
+        internal WhereMetricExponentialHistogramDataPointBucketFilterConfigurator(
             WhereMetricFilterConfigurator configurator, ExponentialHistogramDataPointBucket bucketType)
         {
             _configurator = configurator;
@@ -115,7 +118,7 @@ namespace OddDotCSharp
         }
     }
 
-    public enum ExponentialHistogramDataPointBucket
+    internal enum ExponentialHistogramDataPointBucket
     {
         Positive,
         Negative

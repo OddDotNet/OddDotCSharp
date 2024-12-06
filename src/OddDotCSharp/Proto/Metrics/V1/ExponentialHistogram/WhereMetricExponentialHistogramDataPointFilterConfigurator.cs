@@ -1,22 +1,36 @@
 using System;
 using Google.Protobuf;
-using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Allows for configuring filters related to the DataPoint of an ExponentialHistogram.
+    /// </summary>
     public class WhereMetricExponentialHistogramDataPointFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        /// <summary>
+        /// Use this to access Exemplar properties of this DataPoint.
+        /// </summary>
         public WhereMetricExponentialHistogramDataPointExemplarFilterConfigurator Exemplar { get; }
+        
+        /// <summary>
+        /// Use this to access Positive Bucket properties of this DataPoint.
+        /// </summary>
         public WhereMetricExponentialHistogramDataPointBucketFilterConfigurator Positive { get; }
+        
+        /// <summary>
+        /// Use this to access Negative Bucket properties of this DataPoint.
+        /// </summary>
         public WhereMetricExponentialHistogramDataPointBucketFilterConfigurator Negative { get; }
         
         private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
         private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
-        public WhereMetricExponentialHistogramDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricExponentialHistogramDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             Exemplar = new WhereMetricExponentialHistogramDataPointExemplarFilterConfigurator(configurator);
@@ -251,6 +265,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddAttributeArrayFilter(string key,
             Action<ArrayValueFilterConfigurator> configure)
         {
@@ -286,6 +306,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddAttributeKeyValueListFilter(string key,
             Action<KeyValueListFilterConfigurator> configure)
         {

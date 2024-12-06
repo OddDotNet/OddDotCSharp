@@ -4,12 +4,19 @@ using OpenTelemetry.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Allows for configuring filters related to an ExponentialHistogram.
+    /// </summary>
     public class WhereMetricExponentialHistogramFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        /// <summary>
+        /// Use this to access DataPoint properties of this ExponentialHistogram.
+        /// </summary>
         public WhereMetricExponentialHistogramDataPointFilterConfigurator DataPoint { get; }
 
-        public WhereMetricExponentialHistogramFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricExponentialHistogramFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             DataPoint = new WhereMetricExponentialHistogramDataPointFilterConfigurator(configurator);

@@ -4,11 +4,18 @@ using OpenTelemetry.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to a Metric Sum.
+    /// </summary>
     public class WhereMetricSumFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        /// <summary>
+        /// Use this to access properties specific to the DataPoint of this Sum.
+        /// </summary>
         public WhereMetricSumDataPointFilterConfigurator DataPoint { get; }
-        public WhereMetricSumFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricSumFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             DataPoint = new WhereMetricSumDataPointFilterConfigurator(configurator);

@@ -4,6 +4,24 @@ using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Used for building a query to check for Metric signals.
+    /// </summary>
+    /// <example>
+    /// Build a query to check for all metrics of a specifc name:
+    /// <code>
+    ///     string name = ...;
+    ///     var query = new MetricQueryRequestBuilder()
+    ///         .TakeAll() // Take every metric you find
+    ///         .Wait(TimeSpan.FromSeconds(3)) // Allow for 3 seconds for metrics to come in
+    ///         .Where(filters =>
+    ///         {
+    ///             // Add a filter for the name
+    ///             filters.AddNameFilter(name, StringCompareAsType.Equals);
+    ///         })
+    ///         .Build();
+    /// </code>
+    /// </example>
     public class MetricQueryRequestBuilder
     {
         private const int DefaultDurationMilliseconds = 30000;
@@ -11,6 +29,10 @@ namespace OddDotCSharp
         private readonly MetricQueryRequest _request;
         private readonly WhereMetricFilterConfigurator _whereMetricFilterConfigurator;
         
+        /// <summary>
+        /// Constructs a builder with Take set to TakeFirst, Duration set to the default
+        /// of 30 seconds, and no filters.
+        /// </summary>
         public MetricQueryRequestBuilder()
         {
             _request = new MetricQueryRequest

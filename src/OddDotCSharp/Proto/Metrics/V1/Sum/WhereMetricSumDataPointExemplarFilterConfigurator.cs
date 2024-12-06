@@ -1,18 +1,20 @@
 using System;
 using Google.Protobuf;
-using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to the Exemplar of a Sum DataPoint.
+    /// </summary>
     public class WhereMetricSumDataPointExemplarFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
         
         private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
         private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
-        public WhereMetricSumDataPointExemplarFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricSumDataPointExemplarFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
@@ -259,6 +261,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the filtered attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddFilteredAttributeArrayFilter(string key,
             Action<ArrayValueFilterConfigurator> configure)
         {
@@ -297,6 +305,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the filtered attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddFilteredAttributeKeyValueListFilter(string key,
             Action<KeyValueListFilterConfigurator> configure)
         {

@@ -1,20 +1,26 @@
 using System;
 using Google.Protobuf;
-using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to the DataPoint of a Metric Summary.
+    /// </summary>
     public class WhereMetricSummaryDataPointFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
         
         private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
         private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
+        
+        /// <summary>
+        /// Use this to access properties specific to the ValueAtQuantile of this Summary.
+        /// </summary>
         public WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator ValueAtQuantile { get;  }
 
-        public WhereMetricSummaryDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricSummaryDataPointFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             ValueAtQuantile = new WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator(configurator);
@@ -247,6 +253,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddAttributeArrayFilter(string key,
             Action<ArrayValueFilterConfigurator> configure)
         {
@@ -282,6 +294,12 @@ namespace OddDotCSharp
             return _configurator;
         }
         
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereMetricFilterConfigurator AddAttributeKeyValueListFilter(string key,
             Action<KeyValueListFilterConfigurator> configure)
         {

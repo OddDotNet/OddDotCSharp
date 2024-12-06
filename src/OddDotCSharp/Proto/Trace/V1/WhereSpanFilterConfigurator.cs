@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
-using OddDotCSharp.Proto.Common.V1;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Trace.V1;
 using OpenTelemetry.Proto.Trace.V1;
@@ -9,19 +8,42 @@ using OpenTelemetry.Proto.Trace.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to a Span.
+    /// </summary>
     public class WhereSpanFilterConfigurator
     {
         internal List<Where> Filters { get; } = new List<Where>();
+        
+        /// <summary>
+        /// Use this to access properties specific to an Event of this Span.
+        /// </summary>
         public WhereSpanEventFilterConfigurator Event { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to a SpanLink of this Span.
+        /// </summary>
         public WhereSpanLinkFilterConfigurator Link { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Resource of this Span.
+        /// </summary>
         public WhereSpanResourceFilterConfigurator Resource { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Status of this Span.
+        /// </summary>
         public WhereSpanStatusFilterConfigurator Status { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the InstrumentationScope of this Span.
+        /// </summary>
         public WhereSpanInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
         
         private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
         private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
-        public WhereSpanFilterConfigurator()
+        internal WhereSpanFilterConfigurator()
         {
             Event = new WhereSpanEventFilterConfigurator(this);
             Link = new WhereSpanLinkFilterConfigurator(this);
@@ -420,6 +442,12 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereSpanFilterConfigurator AddAttributeArrayFilter(string key,
             Action<ArrayValueFilterConfigurator> configure)
         {
@@ -449,6 +477,12 @@ namespace OddDotCSharp
             return this;
         }
         
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
         public WhereSpanFilterConfigurator AddAttributeKeyValueListFilter(string key,
             Action<KeyValueListFilterConfigurator> configure)
         {

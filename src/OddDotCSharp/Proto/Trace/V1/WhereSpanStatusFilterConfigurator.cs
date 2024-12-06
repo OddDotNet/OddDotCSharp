@@ -4,11 +4,14 @@ using OpenTelemetry.Proto.Trace.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to the Status of a Span.
+    /// </summary>
     public class WhereSpanStatusFilterConfigurator
     {
         private readonly WhereSpanFilterConfigurator _configurator;
 
-        public WhereSpanStatusFilterConfigurator(WhereSpanFilterConfigurator configurator)
+        internal WhereSpanStatusFilterConfigurator(WhereSpanFilterConfigurator configurator)
         {
             _configurator = configurator;
         }

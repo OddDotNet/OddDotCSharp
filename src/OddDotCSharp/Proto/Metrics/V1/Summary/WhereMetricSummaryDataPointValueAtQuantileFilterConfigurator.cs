@@ -3,11 +3,14 @@ using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to the ValueAtQuantile of a Metric Summary DataPoint.
+    /// </summary>
     public class WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
 
-        public WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricSummaryDataPointValueAtQuantileFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
         }
