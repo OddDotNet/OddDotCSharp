@@ -1,16 +1,25 @@
+using System;
 using Google.Protobuf;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Logs.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Allows for configuring filters related to the InstrumentationScope of a Log signal.
+    /// </summary>
     public class WhereLogInstrumentationScopeFilterConfigurator
     {
         private readonly WhereLogFilterConfigurator _configurator;
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
-        public WhereLogInstrumentationScopeFilterConfigurator(WhereLogFilterConfigurator configurator)
+        internal WhereLogInstrumentationScopeFilterConfigurator(WhereLogFilterConfigurator configurator)
         {
             _configurator = configurator;
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -123,13 +132,22 @@ namespace OddDotCSharp
             {
                 InstrumentationScope = new InstrumentationScopeFilter
                 {
-                    Attribute = new KeyValueProperty
+                    Attributes = new KeyValueListProperty
                     {
-                        Key = key,
-                        StringValue = new StringProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    StringValue = new StringProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -152,13 +170,22 @@ namespace OddDotCSharp
             {
                 InstrumentationScope = new InstrumentationScopeFilter
                 {
-                    Attribute = new KeyValueProperty
+                    Attributes = new KeyValueListProperty
                     {
-                        Key = key,
-                        Int64Value = new Int64Property
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    IntValue = new Int64Property
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -181,13 +208,22 @@ namespace OddDotCSharp
             {
                 InstrumentationScope = new InstrumentationScopeFilter
                 {
-                    Attribute = new KeyValueProperty
+                    Attributes = new KeyValueListProperty
                     {
-                        Key = key,
-                        BoolValue = new BoolProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    BoolValue = new BoolProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -210,13 +246,22 @@ namespace OddDotCSharp
             {
                 InstrumentationScope = new InstrumentationScopeFilter
                 {
-                    Attribute = new KeyValueProperty
+                    Attributes = new KeyValueListProperty
                     {
-                        Key = key,
-                        DoubleValue = new DoubleProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    DoubleValue = new DoubleProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -239,18 +284,97 @@ namespace OddDotCSharp
             {
                 InstrumentationScope = new InstrumentationScopeFilter
                 {
-                    Attribute = new KeyValueProperty
+                    Attributes = new KeyValueListProperty
                     {
-                        Key = key,
-                        ByteStringValue = new ByteStringProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = ByteString.CopyFrom(compare)
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ByteStringValue = new ByteStringProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = ByteString.CopyFrom(compare)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             };
             
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereLogFilterConfigurator AddAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                InstrumentationScope = new InstrumentationScopeFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.InstrumentationScope.Attributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereLogFilterConfigurator AddAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                InstrumentationScope = new InstrumentationScopeFilter
+                {
+                    Attributes = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.InstrumentationScope.Attributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             _configurator.Filters.Add(filter);
             return _configurator;
         }

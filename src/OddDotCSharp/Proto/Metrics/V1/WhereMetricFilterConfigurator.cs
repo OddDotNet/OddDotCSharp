@@ -6,18 +6,52 @@ using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to a Metric.
+    /// </summary>
     public class WhereMetricFilterConfigurator
     {
         internal List<Where> Filters { get; } = new List<Where>();
+        
+        /// <summary>
+        /// Use this to access properties specific to the Gauge of this Metric.
+        /// </summary>
         public WhereMetricGaugeFilterConfigurator Gauge { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Sum of this Metric.
+        /// </summary>
         public WhereMetricSumFilterConfigurator Sum { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Histogram of this Metric.
+        /// </summary>
         public WhereMetricHistogramFilterConfigurator Histogram { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the ExponentialHistogram of this Metric.
+        /// </summary>
         public WhereMetricExponentialHistogramFilterConfigurator ExponentialHistogram { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Summary of this Metric.
+        /// </summary>
         public WhereMetricSummaryFilterConfigurator Summary { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the InstrumentationScope of this Metric.
+        /// </summary>
         public WhereMetricInstrumentationScopeFilterConfigurator InstrumentationScope { get; }
+        
+        /// <summary>
+        /// Use this to access properties specific to the Resource of this Metric.
+        /// </summary>
         public WhereMetricResourceFilterConfigurator Resource { get; }
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
-        public WhereMetricFilterConfigurator()
+        internal WhereMetricFilterConfigurator()
         {
             Gauge = new WhereMetricGaugeFilterConfigurator(this);
             Sum = new WhereMetricSumFilterConfigurator(this);
@@ -26,6 +60,9 @@ namespace OddDotCSharp
             Summary = new WhereMetricSummaryFilterConfigurator(this);
             InstrumentationScope = new WhereMetricInstrumentationScopeFilterConfigurator(this);
             Resource = new WhereMetricResourceFilterConfigurator(this);
+            
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -114,13 +151,22 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    Metadata = new KeyValueProperty
+                    Metadata = new KeyValueListProperty
                     {
-                        Key = key,
-                        StringValue = new StringProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    StringValue = new StringProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -144,13 +190,22 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    Metadata = new KeyValueProperty
+                    Metadata = new KeyValueListProperty
                     {
-                        Key = key,
-                        BoolValue = new BoolProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    BoolValue = new BoolProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -174,13 +229,22 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    Metadata = new KeyValueProperty
+                    Metadata = new KeyValueListProperty
                     {
-                        Key = key,
-                        Int64Value = new Int64Property
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    IntValue = new Int64Property
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -204,13 +268,22 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    Metadata = new KeyValueProperty
+                    Metadata = new KeyValueListProperty
                     {
-                        Key = key,
-                        DoubleValue = new DoubleProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = compare
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    DoubleValue = new DoubleProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = compare
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -234,18 +307,97 @@ namespace OddDotCSharp
             {
                 Property = new PropertyFilter
                 {
-                    Metadata = new KeyValueProperty
+                    Metadata = new KeyValueListProperty
                     {
-                        Key = key,
-                        ByteStringValue = new ByteStringProperty
+                        Values =
                         {
-                            CompareAs = compareAs,
-                            Compare = ByteString.CopyFrom(compare)
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ByteStringValue = new ByteStringProperty
+                                    {
+                                        CompareAs = compareAs,
+                                        Compare = ByteString.CopyFrom(compare)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             };
                     
+            Filters.Add(filter);
+            return this;
+        }
+        
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the metadata being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereMetricFilterConfigurator AddMetadataArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Metadata = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    ArrayValue = new ArrayValueProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Metadata.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            Filters.Add(filter);
+            return this;
+        }
+        
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the metadata being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereMetricFilterConfigurator AddMetadataKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Metadata = new KeyValueListProperty
+                    {
+                        Values =
+                        {
+                            new KeyValueProperty
+                            {
+                                Key = key,
+                                Value = new AnyValueProperty
+                                {
+                                    KvlistValue = new KeyValueListProperty()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Metadata.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             Filters.Add(filter);
             return this;
         }

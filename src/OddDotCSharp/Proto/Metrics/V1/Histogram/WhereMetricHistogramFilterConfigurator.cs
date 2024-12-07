@@ -4,12 +4,19 @@ using OpenTelemetry.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to a Histogram.
+    /// </summary>
     public class WhereMetricHistogramFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        /// <summary>
+        /// Use this to access properties specific to the DataPoint of this Histogram.
+        /// </summary>
         public WhereMetricHistogramDataPointFilterConfigurator DataPoint { get; }
 
-        public WhereMetricHistogramFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricHistogramFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
             DataPoint = new WhereMetricHistogramDataPointFilterConfigurator(configurator);

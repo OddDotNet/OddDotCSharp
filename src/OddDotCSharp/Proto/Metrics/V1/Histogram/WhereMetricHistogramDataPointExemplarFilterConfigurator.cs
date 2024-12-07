@@ -1,16 +1,25 @@
+using System;
 using Google.Protobuf;
 using OddDotNet.Proto.Common.V1;
 using OddDotNet.Proto.Metrics.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Configurator for properties specific to the Exemplar of a Histogram DataPoint.
+    /// </summary>
     public class WhereMetricHistogramDataPointExemplarFilterConfigurator
     {
         private readonly WhereMetricFilterConfigurator _configurator;
+        
+        private readonly ArrayValueFilterConfigurator _arrayValueFilterConfigurator;
+        private readonly KeyValueListFilterConfigurator _keyValueListFilterConfigurator;
 
-        public WhereMetricHistogramDataPointExemplarFilterConfigurator(WhereMetricFilterConfigurator configurator)
+        internal WhereMetricHistogramDataPointExemplarFilterConfigurator(WhereMetricFilterConfigurator configurator)
         {
             _configurator = configurator;
+            _arrayValueFilterConfigurator = new ArrayValueFilterConfigurator();
+            _keyValueListFilterConfigurator = new KeyValueListFilterConfigurator();
         }
         
         /// <summary>
@@ -33,13 +42,22 @@ namespace OddDotCSharp
                         {
                             Exemplar = new ExemplarFilter
                             {
-                                FilteredAttribute = new KeyValueProperty
+                                FilteredAttributes = new KeyValueListProperty
                                 {
-                                    Key = key,
-                                    StringValue = new StringProperty
+                                    Values =
                                     {
-                                        CompareAs = compareAs,
-                                        Compare = compare
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                StringValue = new StringProperty
+                                                {
+                                                    CompareAs = compareAs,
+                                                    Compare = compare
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -72,13 +90,22 @@ namespace OddDotCSharp
                         {
                             Exemplar = new ExemplarFilter
                             {
-                                FilteredAttribute = new KeyValueProperty
+                                FilteredAttributes = new KeyValueListProperty
                                 {
-                                    Key = key,
-                                    BoolValue = new BoolProperty
+                                    Values =
                                     {
-                                        CompareAs = compareAs,
-                                        Compare = compare
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                BoolValue = new BoolProperty
+                                                {
+                                                    CompareAs = compareAs,
+                                                    Compare = compare
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -111,13 +138,22 @@ namespace OddDotCSharp
                         {
                             Exemplar = new ExemplarFilter
                             {
-                                FilteredAttribute = new KeyValueProperty
+                                FilteredAttributes = new KeyValueListProperty
                                 {
-                                    Key = key,
-                                    Int64Value = new Int64Property
+                                    Values =
                                     {
-                                        CompareAs = compareAs,
-                                        Compare = compare
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                IntValue = new Int64Property
+                                                {
+                                                    CompareAs = compareAs,
+                                                    Compare = compare
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -150,13 +186,22 @@ namespace OddDotCSharp
                         {
                             Exemplar = new ExemplarFilter
                             {
-                                FilteredAttribute = new KeyValueProperty
+                                FilteredAttributes = new KeyValueListProperty
                                 {
-                                    Key = key,
-                                    DoubleValue = new DoubleProperty
+                                    Values =
                                     {
-                                        CompareAs = compareAs,
-                                        Compare = compare
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                DoubleValue = new DoubleProperty
+                                                {
+                                                    CompareAs = compareAs,
+                                                    Compare = compare
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -189,13 +234,22 @@ namespace OddDotCSharp
                         {
                             Exemplar = new ExemplarFilter
                             {
-                                FilteredAttribute = new KeyValueProperty
+                                FilteredAttributes = new KeyValueListProperty
                                 {
-                                    Key = key,
-                                    ByteStringValue = new ByteStringProperty
+                                    Values =
                                     {
-                                        CompareAs = compareAs,
-                                        Compare = ByteString.CopyFrom(compare)
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                ByteStringValue = new ByteStringProperty
+                                                {
+                                                    CompareAs = compareAs,
+                                                    Compare = ByteString.CopyFrom(compare)
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -204,6 +258,94 @@ namespace OddDotCSharp
                 }
             };
                     
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        /// <summary>
+        /// Adds an array filter to the list of filters. <see cref="ArrayValueFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the filtered attribute being checked.</param>
+        /// <param name="configure">The action used to configure the ArrayValueProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereMetricFilterConfigurator AddFilteredAttributeArrayFilter(string key,
+            Action<ArrayValueFilterConfigurator> configure)
+        {
+            configure(_arrayValueFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Histogram = new HistogramFilter
+                    {
+                        DataPoint = new HistogramDataPointFilter
+                        {
+                            Exemplar = new ExemplarFilter
+                            {
+                                FilteredAttributes = new KeyValueListProperty
+                                {
+                                    Values =
+                                    {
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                ArrayValue = new ArrayValueProperty()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Histogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values.AddRange(_arrayValueFilterConfigurator.Properties);
+            _configurator.Filters.Add(filter);
+            return _configurator;
+        }
+        
+        /// <summary>
+        /// Adds a KeyValueList filter to the list of filters. <see cref="KeyValueListFilterConfigurator"/> for more details.
+        /// </summary>
+        /// <param name="key">The key of the filtered attribute being checked.</param>
+        /// <param name="configure">The action used to configure the KeyValueListProperty filters being checked.</param>
+        /// <returns>This configurator.</returns>
+        public WhereMetricFilterConfigurator AddFilteredAttributeKeyValueListFilter(string key,
+            Action<KeyValueListFilterConfigurator> configure)
+        {
+            configure(_keyValueListFilterConfigurator);
+            var filter = new Where
+            {
+                Property = new PropertyFilter
+                {
+                    Histogram = new HistogramFilter
+                    {
+                        DataPoint = new HistogramDataPointFilter
+                        {
+                            Exemplar = new ExemplarFilter
+                            {
+                                FilteredAttributes = new KeyValueListProperty
+                                {
+                                    Values =
+                                    {
+                                        new KeyValueProperty
+                                        {
+                                            Key = key,
+                                            Value = new AnyValueProperty
+                                            {
+                                                KvlistValue = new KeyValueListProperty()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            filter.Property.Histogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values.AddRange(_keyValueListFilterConfigurator.Properties);
             _configurator.Filters.Add(filter);
             return _configurator;
         }

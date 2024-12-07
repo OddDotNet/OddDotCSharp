@@ -18,9 +18,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attribute.StringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attribute.StringValue.Compare);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.StringValue.Compare);
         }
         
         [Fact]
@@ -34,9 +34,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attribute.BoolValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attribute.BoolValue.Compare);
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.BoolValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.BoolValue.Compare);
         }
         
         [Fact]
@@ -50,9 +50,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attribute.Int64Value.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attribute.Int64Value.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.IntValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.IntValue.Compare);
         }
         
         [Fact]
@@ -66,9 +66,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attribute.DoubleValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attribute.DoubleValue.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -82,9 +82,48 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attribute.ByteStringValue.Compare);
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.ByteStringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddNumberDataPointAttributeArrayPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Gauge.DataPoint.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddNumberDataPointAttributeKeyValueListPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Gauge.DataPoint.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -154,9 +193,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.StringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.StringValue.Compare);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.StringValue.Compare);
         }
         
         [Fact]
@@ -170,9 +209,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.BoolValue.Compare);
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.BoolValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.BoolValue.Compare);
         }
         
         [Fact]
@@ -186,9 +225,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Int64Value.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.IntValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.IntValue.Compare);
         }
         
         [Fact]
@@ -202,9 +241,9 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.DoubleValue.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -218,9 +257,48 @@ public class MetricGaugeQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttribute.ByteStringValue.Compare);
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ByteStringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddNumberDataPointExemplarFilteredAttributeArrayPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Gauge.DataPoint.Exemplar.AddFilteredAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddNumberDataPointExemplarFilteredAttributeKeyValueListPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.Gauge.DataPoint.Exemplar.AddFilteredAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.Gauge, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.Gauge.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]

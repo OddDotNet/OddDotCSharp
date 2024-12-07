@@ -19,9 +19,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.StringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.StringValue.Compare);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.StringValue.Compare);
         }
         
         [Fact]
@@ -35,9 +35,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.BoolValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.BoolValue.Compare);
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.BoolValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.BoolValue.Compare);
         }
         
         [Fact]
@@ -51,9 +51,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Int64Value.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Int64Value.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.IntValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.IntValue.Compare);
         }
         
         [Fact]
@@ -67,9 +67,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.DoubleValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.DoubleValue.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -83,9 +83,48 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attribute.ByteStringValue.Compare);
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.ByteStringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointAttributeArrayPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.AddAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointAttributeKeyValueListPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.AddAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Attributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -239,9 +278,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.StringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.StringValue.Compare);
+            Assert.Equal(StringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.StringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.StringValue.Compare);
         }
         
         [Fact]
@@ -255,9 +294,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.BoolValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.BoolValue.Compare);
+            Assert.Equal(BoolCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.BoolValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.BoolValue.Compare);
         }
         
         [Fact]
@@ -271,9 +310,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Int64Value.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Int64Value.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.IntValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.IntValue.Compare);
         }
         
         [Fact]
@@ -287,9 +326,9 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.DoubleValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.DoubleValue.Compare);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]
@@ -303,9 +342,48 @@ public class MetricExponentialHistogramQueryRequestBuilderTests
             Assert.NotEmpty(request.Filters);
             Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
             Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
-            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.ByteStringValue.CompareAs);
-            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.Key);
-            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttribute.ByteStringValue.Compare);
+            Assert.Equal(ByteStringCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ByteStringValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ByteStringValue.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointExemplarFilteredAttributeArrayPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Exemplar.AddFilteredAttributeArrayFilter(key, arrayFilters =>
+            {
+                arrayFilters.AddFilter(value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.ArrayValue.Values[0].DoubleValue.Compare);
+        }
+        
+        [Fact]
+        public void AddDataPointExemplarFilteredAttributeKeyValueListPropertyFilter()
+        {
+            var builder = new MetricQueryRequestBuilder();
+            const string key = "key";
+            const double value = 123.0;
+            var request = builder.Where(filters => filters.ExponentialHistogram.DataPoint.Exemplar.AddFilteredAttributeKeyValueListFilter(key, kvlFilters =>
+            {
+                kvlFilters.AddFilter(key, value, NumberCompareAsType.Equals);
+            })).Build();
+            
+            Assert.NotEmpty(request.Filters);
+            Assert.Equal(Where.ValueOneofCase.Property, request.Filters[0].ValueCase);
+            Assert.Equal(PropertyFilter.ValueOneofCase.ExponentialHistogram, request.Filters[0].Property.ValueCase);
+            Assert.Equal(NumberCompareAsType.Equals, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.CompareAs);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Key);
+            Assert.Equal(key, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Key);
+            Assert.Equal(value, request.Filters[0].Property.ExponentialHistogram.DataPoint.Exemplar.FilteredAttributes.Values[0].Value.KvlistValue.Values[0].Value.DoubleValue.Compare);
         }
         
         [Fact]

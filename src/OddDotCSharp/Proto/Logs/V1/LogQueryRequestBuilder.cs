@@ -4,6 +4,24 @@ using OddDotNet.Proto.Logs.V1;
 
 namespace OddDotCSharp
 {
+    /// <summary>
+    /// Used for building a query to check for Log signals.
+    /// </summary>
+    /// <example>
+    /// Build a query to check for all logs associated with a TraceId:
+    /// <code>
+    ///     byte[] traceId = ...;
+    ///     var query = new LogQueryRequestBuilder()
+    ///         .TakeAll() // Take every log you find
+    ///         .Wait(TimeSpan.FromSeconds(3)) // Allow for 3 seconds for logs to come in
+    ///         .Where(filters =>
+    ///         {
+    ///             // Add a filter for the TraceId
+    ///             filters.AddTraceIdFilter(traceId, ByteStringCompareAsType.Equals);
+    ///         })
+    ///         .Build();
+    /// </code>
+    /// </example>
     public class LogQueryRequestBuilder
     {
         private const int DefaultDurationMilliseconds = 30000;
@@ -11,6 +29,10 @@ namespace OddDotCSharp
         private readonly LogQueryRequest _request;
         private readonly WhereLogFilterConfigurator _whereLogFilterConfigurator;
 
+        /// <summary>
+        /// Constructs a builder with Take set to TakeFirst, Duration set to the default
+        /// of 30 seconds, and no filters.
+        /// </summary>
         public LogQueryRequestBuilder()
         {
             _request = new LogQueryRequest
@@ -42,7 +64,7 @@ namespace OddDotCSharp
         /// Takes the exact number of Logs specified that it matches against.
         /// </summary>
         /// <param name="count">The number of Logs to find.</param>
-        /// <returns>this <see cref="QueryRequestBuilder"/></returns>
+        /// <returns>this <see cref="LogQueryRequestBuilder"/></returns>
         public LogQueryRequestBuilder TakeExact(int count)
         {
             _request.Take = new Take { TakeExact = new TakeExact { Count = count } };
@@ -88,7 +110,7 @@ namespace OddDotCSharp
         /// <param name="configure">The action used to configure the list of filters.</param>
         /// <returns>this <see cref="LogQueryRequestBuilder"/></returns>
         /// <example>
-        /// This shows how to configure a filter for the Name of the metric:
+        /// This shows how to configure a filter for the TimeUnixNano property of the log:
         /// <code>
         ///     var request = new LogQueryRequestBuilder().
         ///         .Where(filters =>
