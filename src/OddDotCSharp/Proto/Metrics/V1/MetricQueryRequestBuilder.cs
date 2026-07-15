@@ -51,7 +51,8 @@ namespace OddDotCSharp
         }
         
         /// <summary>
-        /// Takes the first Metric that it matches against.
+        /// Configures the query to return as soon as the first matching Metric is found, or when
+        /// the Wait duration elapses if none is found. This is the default.
         /// </summary>
         /// <returns>this <see cref="MetricQueryRequestBuilder"/></returns>
         public MetricQueryRequestBuilder TakeFirst()
@@ -61,7 +62,8 @@ namespace OddDotCSharp
         }
         
         /// <summary>
-        /// Takes the exact number of Metrics specified that it matches against.
+        /// Configures the query to return as soon as <paramref name="count"/> matching Metrics are
+        /// found, or when the Wait duration elapses with fewer than <paramref name="count"/> found.
         /// </summary>
         /// <param name="count">The number of Metrics to find.</param>
         /// <returns>this <see cref="MetricQueryRequestBuilder"/></returns>
@@ -72,7 +74,10 @@ namespace OddDotCSharp
         }
         
         /// <summary>
-        /// Takes all Metrics that match the given filters within the provided timeframe.
+        /// Configures the query to collect every matching Metric seen over the whole Wait duration.
+        /// TakeAll never returns early — the query always blocks for the full duration — so prefer
+        /// <see cref="TakeFirst"/> or <see cref="TakeExact"/> with a filter to return as soon as a
+        /// specific Metric arrives.
         /// </summary>
         /// <returns>this <see cref="MetricQueryRequestBuilder"/></returns>
         public MetricQueryRequestBuilder TakeAll()
@@ -82,10 +87,12 @@ namespace OddDotCSharp
         }
         
         /// <summary>
-        /// Allows for specifying the amount of time to wait for a matching Metric to be received. 
+        /// Sets the maximum time the query blocks for matching Metrics. A value of zero or less
+        /// selects the sink default of 30 seconds; it does not return immediately.
         /// </summary>
         /// <param name="timeSpan">
-        /// The TimeSpan specifying how long to wait for Metrics. Negative values will result in a Duration of 0.
+        /// The maximum time to wait for Metrics. Zero or negative produces a Duration of 0, which the
+        /// sink treats as its 30-second default.
         /// </param>
         /// <returns>this <see cref="MetricQueryRequestBuilder"/></returns>
         public MetricQueryRequestBuilder Wait(TimeSpan timeSpan)
